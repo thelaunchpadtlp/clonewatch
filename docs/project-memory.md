@@ -335,3 +335,21 @@ These are considered the active baseline automations for the current phase.
   - explicit policy that this mode is exceptional, while shared-collaborative mode stays preferred
 - User also requested resilient design against repeated "stream disconnected before completion" interruptions.
 - Both items were accepted as pending integral roadmap work (not implemented in this pass).
+
+## Incident Documentation Upgrade (April 14, 2026)
+
+- Added formal incident record for persistent GitHub Actions pre-step failures:
+  - `docs/github/actions-root-cause-incident.md`
+- Added explicit external investigation task:
+  - `docs/collab/external-inbox/EXT-ACTIONS-ROOTCAUSE-001.json`
+  - `docs/collab/external-outbox/EXT-ACTIONS-ROOTCAUSE-001--20260414-172000--NEW.json`
+- Goal:
+  - allow externos to investigate and propose more robust/permanent fixes with full project context and evidence requirements.
+
+## Deferred Intake (April 14, 2026) - "Help Solve or Help Solve Better"
+
+- User requested a full subsystem to expose serious problems so externos can help fix or improve fixes.
+- Constraint accepted:
+  - plan + implementation must be fast and low-token
+  - do not interrupt active execution; defer to next implementation wave
+- Added to roadmap pending integral backlog for next phase execution.

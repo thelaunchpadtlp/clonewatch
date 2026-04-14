@@ -477,3 +477,23 @@ Operational memory update (April 14, 2026 - deferred intake after active executi
 - User also requested project-level resilience strategy against:
   - repeated `stream disconnected before completion` interruptions
 - Both were intentionally deferred to the next implementation wave (current execution remained uninterrupted) and recorded in roadmap pending integral items.
+
+Operational memory update (April 14, 2026 - big problem formalization for external solvers)
+
+- Persistent GitHub Actions blocker has been formalized as a dedicated incident file:
+  - `docs/github/actions-root-cause-incident.md`
+- A high-priority external task was opened for cross-tool investigation:
+  - `EXT-ACTIONS-ROOTCAUSE-001`
+- This ensures major operational blockers are no longer implicit chat knowledge; they are now visible and actionable inside the project for externos.
+
+Operational memory update (April 14, 2026 - deferred subsystem intake: Help Solve or Help Solve Better)
+
+- User requested a full subsystem to report serious problems and invite externos to solve or improve solutions.
+- Required qualities captured:
+  - fast implementation
+  - low token usage
+  - high automation for repeated issue registration
+  - shared cross-externo visibility and collaboration
+- Decision:
+  - accepted as next-wave subsystem without interrupting active execution
+  - recorded as integral pending item in roadmap

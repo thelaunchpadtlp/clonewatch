@@ -97,6 +97,11 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
   - inventory and event logs
   - strict isolation + anti-contamination safeguards
   - explicit "exceptional use" policy (collaboration-first remains default)
+- [ ] "Help Solve or Help Solve Better" subsystem:
+  - shared serious-problem registry for all externos
+  - lightweight contracts, flows, and evidence standards
+  - automation-first intake/update so reporting is low-friction
+  - cross-externo collaboration loops to improve/fix solutions
 - [ ] Reliability hardening for interrupted streams (`stream disconnected before completion`) with runbook + safeguards
 - [ ] Enforcement model so externos must read/acknowledge project standards before write operations
 

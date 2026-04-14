@@ -30,6 +30,8 @@ All notable project changes are recorded here.
 - GitHub auth/access policy (`docs/github/auth-access-policy.md`)
 - Codex commit/PR instruction source (`docs/github/codex-commit-pr-instructions.md`)
 - Actions diagnostics script (`tools/collab/diagnose-github-actions.sh`)
+- GitHub Actions root-cause incident doc (`docs/github/actions-root-cause-incident.md`)
+- external high-priority investigation task for Actions blocker (`EXT-ACTIONS-ROOTCAUSE-001`)
 
 ### Changed
 

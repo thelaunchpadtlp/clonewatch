@@ -1,0 +1,22 @@
+{
+  "task_id": "EXT-ACTIONS-ROOTCAUSE-001",
+  "created_at": "2026-04-14T17:20:00Z",
+  "from_external_app": "Any Externo",
+  "requester": "project-owner",
+  "title": "Find root cause of GitHub Actions pre-step failures",
+  "objective": "Determine why workflows fail with empty steps arrays and provide durable fix path.",
+  "target_paths": [
+    "docs/github/actions-root-cause-incident.md",
+    "docs/github/actions-triage.md",
+    "tools/collab/diagnose-github-actions.sh"
+  ],
+  "acceptance_criteria": [
+    "Root cause category validated with concrete evidence",
+    "Actionable fix sequence documented",
+    "No speculative-only conclusions"
+  ],
+  "priority": "high",
+  "urgency": "now",
+  "status": "NEW",
+  "owner": "unassigned"
+}

@@ -1,0 +1,15 @@
+{
+  "task_id": "EXT-ACTIONS-ROOTCAUSE-001",
+  "timestamp": "2026-04-14T17:20:00Z",
+  "event": "NEW",
+  "status": "ok",
+  "owner": "project-owner",
+  "agent_app": "ChatGPT-Codex",
+  "session_id": "codex-20260414-actions-rootcause-doc",
+  "message": "External investigation requested for GitHub Actions infra-level failures.",
+  "artifacts": [
+    "docs/github/actions-root-cause-incident.md",
+    "docs/collab/external-inbox/EXT-ACTIONS-ROOTCAUSE-001.json"
+  ],
+  "questions": []
+}

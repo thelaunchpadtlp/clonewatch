@@ -12,6 +12,10 @@ Repository health is decided by the latest commit on `main` for each relevant wo
 
 Older red runs do not block current decisions unless the same workflow is red on latest `main`.
 
+Active incident tracker:
+
+- `docs/github/actions-root-cause-incident.md`
+
 ## Noise handling
 
 - Dependabot bot runs are intentionally reduced/filtered.
