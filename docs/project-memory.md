@@ -427,3 +427,20 @@ These are considered the active baseline automations for the current phase.
   - PR #4 merged successfully into `main`
   - the CI incident is now considered resolved
   - the incident stays documented so externos can still suggest stronger or more elegant future hardening
+
+## Wave 3 Session — Governance and Sprint A Pivot (April 14, 2026)
+
+- Auto-merge enabled on GitHub repo (`allow_auto_merge: true`); all future PRs can use
+  `gh pr merge --auto --squash` to merge automatically once required checks pass.
+- Repository visibility policy institutionalized at `docs/governance/repo-visibility-policy.md`.
+  Contains 6 institutional principles, authorized trigger table (4 private triggers, 3 public triggers),
+  exact gh api commands, impact reference table, and mandatory Decision Log. First entry records the
+  2026-04-14 PRIVATE→PUBLIC toggle (root cause: GitHub billing failure blocking Actions on private repo).
+- All Codex uncommitted local work from session `codex-20260414-213200` bundled into PR #6:
+  guards IGNORED_PATTERN filter, clonewatch.md Operational memory headers, LICENSE file.
+- TASK-CLAUDE-002, TASK-CLAUDE-003, TASK-CLAUDE-004 all completed via PR #6.
+- Xcode state: stable = 26.4 (build 17E192), Beta = 26.5 — both installed. Beta not used for CI.
+- Sprint A UI/UX targets catalogued in macOS roadmap. Key gaps in current UI (629-line CloneWatchApp.swift):
+  no NavigationSplitView, no SF Symbols on step indicators, no macOS materials (using manual opacity),
+  no drag-and-drop for paths, no keyboard Commands scene, no Settings scene, no step transition animations,
+  minimum window width 1080px (too wide). Sprint A output = findings doc, not code.
