@@ -9,6 +9,11 @@ CloneWatch is a macOS-first cloning, verification, and storage-migration project
 - A docs tool that preserves the original ChatGPT project history by extracting the provided PDFs into Markdown
 - Legacy project memory and the earlier `scan_clone.py` script for historical reference
 
+## Strategic docs
+
+- `docs/roadmap/macos-first-class-adoption.md`: prioritized adoption map (Now / Next / Later / Pending integral)
+- `docs/decisions/macos-prioritization-framework.md`: decision rule for high-impact feature intake
+
 ## Current architecture
 
 CloneWatch is being designed around five capability bands:

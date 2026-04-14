@@ -205,3 +205,16 @@ These are considered the active baseline automations for the current phase.
   - session traceability policy and session registry added
 - Validation:
   - `swift test` passed (all tests green)
+
+## macOS Ambition Intake (April 14, 2026)
+
+- Large macOS/HIG/accessibility/ecosystem checklist was accepted as project input.
+- Integrated approach chosen:
+  - implement high-impact items now
+  - keep remaining items as explicit `PENDING INTEGRAL` backlog (inside project docs, not lost)
+- Added:
+  - `docs/roadmap/macos-first-class-adoption.md`
+  - `docs/decisions/macos-prioritization-framework.md`
+- Actions interpretation reinforcement:
+  - investigate latest `main` run first
+  - treat older/bot noise as secondary unless latest mainline fails in the same workflow

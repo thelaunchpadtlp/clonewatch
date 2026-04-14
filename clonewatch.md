@@ -343,3 +343,17 @@ Operational memory update (April 14, 2026 - post-execution completion)
 - Delivery discipline satisfied:
   - memory updated before execution and after execution
   - pending changes are ready for commit/push
+
+Operational memory update (April 14, 2026 - macOS ambition capture and integral pending)
+
+- User requested ambitious incorporation of broad macOS design/architecture/accessibility guidance.
+- Project response chosen:
+  - absorb the checklist into a structured roadmap
+  - implement high-impact sections now
+  - keep the rest as explicit, first-class pending items in project records
+- Artifacts added:
+  - `docs/roadmap/macos-first-class-adoption.md`
+  - `docs/decisions/macos-prioritization-framework.md`
+- Operating principle reinforced:
+  - prioritize latest mainline CI signal for debugging
+  - prevent older/bot run noise from derailing active delivery
