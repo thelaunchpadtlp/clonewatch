@@ -35,3 +35,4 @@ swift run CloneWatchDocsTool
 - Treat iCloud and File Provider paths as special cases
 - Update docs when architecture or behavior changes
 - If you change architecture/runtime/automation behavior, update memory in the same PR (`clonewatch.md` or `docs/project-memory.md`)
+- This workspace can use SSH push to `origin`; use direct pushes intentionally and only with reviewed commit scope

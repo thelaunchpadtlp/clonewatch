@@ -76,3 +76,15 @@ These automations are healthy because they protect quality and security without 
 ## Current status
 
 This repo has been bootstrapped locally but may still need GitHub authentication on this Mac before `git push` works from Terminal.
+
+## Codex Git Push Capability (local environment)
+
+This development environment is now configured to push using SSH to:
+
+- `git@github.com:thelaunchpadtlp/clonewatch.git`
+
+Operational policy:
+
+- Codex may execute `push origin` directly when the user requests it or when required to complete an agreed workflow.
+- Pushes should stay scoped to reviewed changes and clear commit messages.
+- This capability depends on local machine SSH configuration and can be rotated/revoked at any time from GitHub SSH keys.

@@ -102,3 +102,11 @@ Before compacting context, append a dated summary of:
 - `Memory Guard`
 
 These are considered the active baseline automations for the current phase.
+
+## Git Push Capability (April 14, 2026)
+
+- Local repo remote is now SSH-based (`git@github.com:thelaunchpadtlp/clonewatch.git`).
+- SSH auth for this machine was validated successfully against GitHub.
+- Operational implication:
+  - Codex can execute `push origin` directly in this workspace when needed.
+  - Continue using intentional commit scope and memory discipline before push.

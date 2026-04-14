@@ -231,3 +231,13 @@ Operational memory update (April 14, 2026 - Actions and GitHub automation status
   - `Docs History Validation`
   - `Dependabot`
   - `Memory Guard`
+
+Operational memory update (April 14, 2026 - SSH push capability enabled)
+
+- User completed GitHub SSH key registration for this machine.
+- Repository remote was switched from HTTPS to SSH:
+  - `git@github.com:thelaunchpadtlp/clonewatch.git`
+- SSH authentication test succeeded (`Hi thelaunchpadtlp! You've successfully authenticated...`).
+- Project-level decision:
+  - Codex can now perform `push origin` directly from terminal in this workspace when requested or when needed to complete agreed flows.
+  - pushes remain subject to normal safety discipline (clear commit scope, readable commit messages, and memory updates when required).
