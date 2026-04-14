@@ -1,0 +1,17 @@
+.build/
+.swiftpm/
+DerivedData/
+.DS_Store
+*.swp
+*.tmp
+*.log
+
+# Local CloneWatch runtime artifacts
+.clonewatch/
+
+# App support or generated runtime files should not live in repo by default
+Library/
+
+# Very large local archives are kept in-project but out of Git history.
+_local-archive/
+docs/chat-history/raw-pdfs/*.pdf
