@@ -241,3 +241,15 @@ Operational memory update (April 14, 2026 - SSH push capability enabled)
 - Project-level decision:
   - Codex can now perform `push origin` directly from terminal in this workspace when requested or when needed to complete agreed flows.
   - pushes remain subject to normal safety discipline (clear commit scope, readable commit messages, and memory updates when required).
+
+Operational memory update (April 14, 2026 - default auto-push workflow)
+
+- User requested that push behavior become default and explicit in project policy.
+- Policy adopted:
+  - after agreed implementation + relevant validation + memory update, Codex should commit and run `push origin` automatically by default
+  - only skip auto-push if user explicitly asks not to push
+  - if risk is non-obvious (destructive ops, unresolved failures, uncertain blast radius), Codex pauses for explicit confirmation
+- Policy documentation added to:
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `docs/decisions/git-operations.md`

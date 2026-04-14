@@ -88,3 +88,8 @@ Operational policy:
 - Codex may execute `push origin` directly when the user requests it or when required to complete an agreed workflow.
 - Pushes should stay scoped to reviewed changes and clear commit messages.
 - This capability depends on local machine SSH configuration and can be rotated/revoked at any time from GitHub SSH keys.
+
+Default execution policy (from now on):
+
+- After implementing agreed changes and running relevant checks, Codex will push to `origin/main` automatically unless the user explicitly says not to push.
+- If a push involves non-obvious risk (for example destructive behavior, major refactors, or unresolved failures), Codex should pause and request confirmation before pushing.

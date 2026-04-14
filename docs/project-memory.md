@@ -110,3 +110,14 @@ These are considered the active baseline automations for the current phase.
 - Operational implication:
   - Codex can execute `push origin` directly in this workspace when needed.
   - Continue using intentional commit scope and memory discipline before push.
+
+## Default Assistant Git Flow (April 14, 2026)
+
+- New default execution policy:
+  - implement -> validate -> update memory (if applicable) -> commit -> push
+- Auto-push is now default unless the user explicitly requests no push.
+- Assistant should still pause for explicit confirmation when push risk is non-obvious.
+- Policy recorded in:
+  - `README.md`
+  - `CONTRIBUTING.md`
+  - `docs/decisions/git-operations.md`

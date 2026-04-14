@@ -36,3 +36,4 @@ swift run CloneWatchDocsTool
 - Update docs when architecture or behavior changes
 - If you change architecture/runtime/automation behavior, update memory in the same PR (`clonewatch.md` or `docs/project-memory.md`)
 - This workspace can use SSH push to `origin`; use direct pushes intentionally and only with reviewed commit scope
+- Default assistant workflow in this workspace: implement -> validate -> update memory -> commit -> `push origin` automatically (unless user says otherwise)
