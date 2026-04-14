@@ -497,3 +497,19 @@ Operational memory update (April 14, 2026 - deferred subsystem intake: Help Solv
 - Decision:
   - accepted as next-wave subsystem without interrupting active execution
   - recorded as integral pending item in roadmap
+
+Operational memory update (April 14, 2026 - session pause handoff for Claude inspection)
+
+- User requested a project update before pausing Codex so Claude can inspect the workspace and GitHub state.
+- Reconfirmed before pause:
+  - local `swift build` passes
+  - local `swift test` passes
+  - the base app can already be run locally via Xcode or `swift run CloneWatchApp`
+  - GitHub Actions is still blocked by the same infra/account-level signature (`steps: []`)
+- Current operating recommendation:
+  - Claude should act first as an **externo analyst**
+  - read the repo, docs, incident files, and GitHub state
+  - report findings through the external coordination system before any shared-workspace mutations
+- Local note:
+  - a non-tracked `.claude/` directory appeared in the repo root after Claude Desktop interaction
+  - for now it is treated as local tool state rather than shared project state

@@ -55,6 +55,31 @@ swift test
 swift run CloneWatchDocsTool
 ```
 
+## Try the app locally now
+
+You can already try the base macOS app on this Mac.
+
+Simplest path:
+
+1. Open `Xcode`
+2. Choose `File > Open...`
+3. Open `/Users/Shared/Pruebas/CloneWatch`
+4. Select the `CloneWatchApp` scheme
+5. Press `Run`
+
+Terminal path:
+
+```bash
+cd /Users/Shared/Pruebas/CloneWatch
+swift run CloneWatchApp
+```
+
+What this means in beginner language:
+
+- if it **builds**, the code can be translated into a runnable app
+- if it **runs**, you can already inspect the current wizard and flow on your Mac
+- this does **not** mean "finished V1 product", only that the base app is viable
+
 ## GitHub workflow for beginners
 
 The healthy loop is:
@@ -90,6 +115,18 @@ These automations are healthy because they protect quality and security without 
 ## Current status
 
 This repo is currently authenticated for GitHub CLI on this Mac. Keep credentials rotated and least-privileged.
+
+Operational status snapshot:
+
+- local `swift build` passes
+- local `swift test` passes
+- base app is runnable locally
+- GitHub Actions is still blocked by an infra/account-level incident where jobs fail before running steps
+
+See:
+
+- `docs/github/actions-root-cause-incident.md`
+- `docs/github/actions-triage.md`
 
 ## Codex Git Push Capability (local environment)
 
@@ -159,3 +196,17 @@ Every external-task event must also exist in:
 
 - `docs/collab/session-log.jsonl`
 - `docs/collab/collab.sqlite`
+
+## Claude and other externos right now
+
+If Claude Desktop or another externo joins during an active Codex writer session:
+
+- preferred mode is **analysis first**
+- externo should read the repo, docs, GitHub state, and incident records
+- externo should return findings/action items through the external inbox/outbox flow
+- externo should not write into the shared workspace until the writer session is explicitly handed off
+
+Local note:
+
+- a local `.claude/` directory was observed after Claude Desktop interaction
+- treat that directory as local tool state, not shared project state, unless a later policy explicitly promotes it into the repo

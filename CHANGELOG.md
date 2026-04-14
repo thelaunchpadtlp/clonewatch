@@ -44,6 +44,8 @@ All notable project changes are recorded here.
 - Memory and project-record guards now include CollabOps-sensitive paths (`tools/collab`, `docs/collab`, `docs/schemas`)
 - CI now uses bot-noise filter and per-ref concurrency for cleaner signal
 - Collab schema expanded with `external_tasks` and `external_task_events` tables
+- README now includes beginner-friendly local app test instructions and explicit guidance for Claude/externos during an active writer session
+- project memory now records the session-pause handoff and the `.claude/` local-tool-state observation
 
 ### Fixed
 

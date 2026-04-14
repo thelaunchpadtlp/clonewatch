@@ -353,3 +353,19 @@ These are considered the active baseline automations for the current phase.
   - plan + implementation must be fast and low-token
   - do not interrupt active execution; defer to next implementation wave
 - Added to roadmap pending integral backlog for next phase execution.
+
+## Session Pause Handoff (April 14, 2026)
+
+- User requested a pause in the active Codex session so Claude can inspect the project for a while.
+- Fresh operational conclusions were recorded into the project before pausing:
+  - `swift build` passes locally
+  - `swift test` passes locally
+  - `CloneWatchApp` is runnable locally through Xcode or `swift run CloneWatchApp`
+  - GitHub Actions remains blocked by the same infra/account-level pattern (`steps: []` before any real steps execute)
+- Practical recommendation for Claude and other externos during this pause:
+  - inspect/read/analyze first
+  - use the external delegation channels
+  - do not mutate the shared workspace until an explicit writer handoff exists
+- Local tooling observation:
+  - a non-tracked `.claude/` directory appeared in the repo root after Claude Desktop interaction
+  - for now it should be treated as local tool state, not canonical shared project state
