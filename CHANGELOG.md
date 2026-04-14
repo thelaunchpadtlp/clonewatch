@@ -4,6 +4,27 @@ All notable project changes are recorded here.
 
 ## 2026-04-14
 
+### Added (Claude Code session — wave 3: governance, auto-merge, cleanup)
+
+- `docs/governance/repo-visibility-policy.md` — institutional policy governing public ↔ private
+  repository visibility; includes 6 written principles, authorized trigger table (4 private / 3 public
+  triggers), exact toggle procedure with `gh api` commands, impact reference table, and a mandatory
+  signed Decision Log; first entry records the 2026-04-14 PRIVATE→PUBLIC toggle and its root cause
+- `LICENSE` — explicit All Rights Reserved proprietary notice for The Launch Pad - TLP; makes
+  implicit protection explicit now that the repo is public
+- `docs/governance/` — new governance directory for project-level institutional policy documents
+
+### Changed (Claude Code session — wave 3)
+
+- `.github/workflows/collab-guard.yml`, `memory-guard.yml`, `project-records-guard.yml` — added
+  `IGNORED_PATTERN` filter to exclude agent workspace paths (`docs/temp/`, `docs/sessions/`,
+  `session-log.jsonl`, `handoffs/`, `collab.sqlite`) from required-update enforcement; these are
+  ephemeral agent files, not product memory
+- `clonewatch.md` — promoted flat `Operational memory update` lines to `### Operational memory
+  update: …` headers for proper navigation (TASK-CLAUDE-003 partial completion)
+- GitHub repo setting `allow_auto_merge` enabled — future PRs can use `gh pr merge --auto --squash`
+  to merge automatically once all required checks pass, eliminating manual merge step
+
 ### Added (Claude Code session — wave 2: checkpoint automation)
 
 - `tools/collab/claude-checkpoint.sh` — automation trigger script for Claude; 6 trigger types

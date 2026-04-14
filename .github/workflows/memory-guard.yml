@@ -37,6 +37,8 @@ jobs:
           fi
 
           CHANGED_FILES="$(git diff --name-only "$RANGE" || true)"
+          IGNORED_PATTERN='^(docs/temp/|docs/sessions/|docs/collab/session-log\.jsonl$|docs/collab/handoffs/|docs/collab/collab\.sqlite$)'
+          CHANGED_FILES="$(printf '%s\n' "$CHANGED_FILES" | grep -Ev "$IGNORED_PATTERN" || true)"
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
@@ -48,7 +50,7 @@ jobs:
           NEEDS_MEMORY="false"
           while IFS= read -r file; do
             [[ -z "$file" ]] && continue
-            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" == "README.md" ]] || [[ "$file" == "docs/architecture.md" ]] || [[ "$file" =~ ^docs/decisions/ ]] || [[ "$file" =~ ^docs/plans/ ]] || [[ "$file" =~ ^docs/collab/ ]] || [[ "$file" =~ ^docs/schemas/ ]] || [[ "$file" =~ ^tools/collab/ ]] || [[ "$file" =~ ^\.github/workflows/ ]]; then
+            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" == "README.md" ]] || [[ "$file" == "CLAUDE.md" ]] || [[ "$file" == "docs/architecture.md" ]] || [[ "$file" =~ ^docs/decisions/ ]] || [[ "$file" =~ ^docs/plans/ ]] || [[ "$file" =~ ^docs/collab/ ]] || [[ "$file" =~ ^docs/schemas/ ]] || [[ "$file" =~ ^tools/collab/ ]] || [[ "$file" =~ ^\.github/workflows/ ]]; then
               NEEDS_MEMORY="true"
               break
             fi

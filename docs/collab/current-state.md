@@ -2,7 +2,7 @@
 
 **This file is updated by each agent at session end. Always read this first.**
 
-Last updated: 2026-04-14 by Codex (session `codex-20260414-213200`, post-PR-4 merge verification)
+Last updated: 2026-04-14 by Claude Code (session `6e5936df-continued`, wave 3: governance + cleanup)
 
 ---
 
@@ -10,9 +10,9 @@ Last updated: 2026-04-14 by Codex (session `codex-20260414-213200`, post-PR-4 me
 
 | Field | Value |
 |---|---|
-| Active lock | **HELD** — Codex (session `codex-20260414-213200`) |
-| Last holder | Codex |
-| Lease context | Final incident documentation after CI/ruleset resolution and PR #4 merge |
+| Active lock | **FREE** — Codex session `codex-20260414-213200` released (PRs #4 and #5 merged) |
+| Last holder | Codex (then Claude Code wave 3) |
+| Lease context | Claude Code wave 3 adding governance doc, CHANGELOG, roadmap; PR #6 open with auto-merge |
 
 ---
 
@@ -82,14 +82,18 @@ CodeQL Default Setup: DISABLED so the custom workflow is authoritative.
 
 ## Pending items (priority order)
 
-1. **Codex: TASK-CLAUDE-002** — update CI guard paths to exclude docs/temp/ and docs/sessions/
-2. **Codex: TASK-CLAUDE-003** — add markdown headers to clonewatch.md body
-3. **Codex: TASK-CLAUDE-004** — add proprietary LICENSE file (All Rights Reserved)
-4. **Sprint A**: run app end-to-end, test clone + verify + ledger flow
-5. **Next wave**: "Help Solve or Help Solve Better" subsystem design
-6. **Gate B**: macOS signing/notarization pipeline
-7. **Next tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
-8. **Pending**: Expanded accessibility, `.webloc` file for reports
+1. ✅ **TASK-CLAUDE-002** — guards updated (IGNORED_PATTERN filter, PR #6)
+2. ✅ **TASK-CLAUDE-003** — clonewatch.md headers promoted to `###` (PR #6)
+3. ✅ **TASK-CLAUDE-004** — LICENSE file added (PR #6)
+4. ✅ **Auto-merge** — enabled at repo level; PR #6 has auto-merge active
+5. ✅ **Repo visibility policy** — `docs/governance/repo-visibility-policy.md` created (PR #6)
+6. **PR #6** — open, auto-merge set, CI running; needs Collab Guard + Project Records Guard to pass
+7. **Sprint A**: run app end-to-end, test clone + verify + ledger flow; document UX findings
+8. **Sprint A UI/UX**: see `docs/roadmap/macos-first-class-adoption.md` Sprint A section for full target list
+9. **Next wave**: "Help Solve or Help Solve Better" subsystem design
+10. **Gate B**: macOS signing/notarization pipeline
+11. **Next tier**: Settings scene (Cmd+,), App Intents, Notification pipeline, Drag & drop, SF Symbols
+12. **Pending**: Expanded accessibility, `.webloc` file for reports, app icon design
 
 ---
 
