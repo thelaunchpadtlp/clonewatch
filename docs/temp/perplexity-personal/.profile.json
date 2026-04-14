@@ -1,0 +1,11 @@
+{
+  "agent_id": "perplexity-personal",
+  "agent_app": "Perplexity",
+  "account_type": "personal",
+  "capabilities": [
+    "read",
+    "web"
+  ],
+  "collab_role": "externo-analyst",
+  "owner_mapping": "The Launch Pad - TLP"
+}

@@ -1,0 +1,15 @@
+{
+  "agent_id": "manus-personal",
+  "agent_app": "Manus (My Computer)",
+  "account_type": "personal",
+  "capabilities": [
+    "read",
+    "write",
+    "bash",
+    "web",
+    "file-system",
+    "computer-use"
+  ],
+  "collab_role": "full-writer",
+  "owner_mapping": "The Launch Pad - TLP"
+}

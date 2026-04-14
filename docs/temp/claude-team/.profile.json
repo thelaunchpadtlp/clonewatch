@@ -1,0 +1,14 @@
+{
+  "agent_id": "claude-team",
+  "agent_app": "Claude (Team)",
+  "account_type": "team",
+  "capabilities": [
+    "read",
+    "write",
+    "bash",
+    "web",
+    "file-system"
+  ],
+  "collab_role": "full-writer",
+  "owner_mapping": "The Launch Pad - TLP"
+}

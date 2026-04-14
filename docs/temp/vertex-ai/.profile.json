@@ -1,0 +1,12 @@
+{
+  "agent_id": "vertex-ai",
+  "agent_app": "Google Vertex AI",
+  "account_type": "personal",
+  "capabilities": [
+    "read",
+    "write",
+    "web"
+  ],
+  "collab_role": "externo-analyst",
+  "owner_mapping": "The Launch Pad - TLP"
+}

@@ -1,0 +1,12 @@
+{
+  "agent_id": "manus-team",
+  "agent_app": "Manus (Team)",
+  "account_type": "team",
+  "capabilities": [
+    "read",
+    "write",
+    "web"
+  ],
+  "collab_role": "externo-analyst",
+  "owner_mapping": "The Launch Pad - TLP"
+}

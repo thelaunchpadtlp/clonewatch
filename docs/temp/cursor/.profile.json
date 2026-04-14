@@ -1,0 +1,13 @@
+{
+  "agent_id": "cursor",
+  "agent_app": "Cursor",
+  "account_type": "personal",
+  "capabilities": [
+    "read",
+    "write",
+    "bash",
+    "file-system"
+  ],
+  "collab_role": "full-writer",
+  "owner_mapping": "The Launch Pad - TLP"
+}

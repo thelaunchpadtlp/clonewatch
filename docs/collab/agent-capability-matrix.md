@@ -4,6 +4,16 @@ Date: 2026-04-14
 
 This matrix is for safe project operations, not marketing claims. If any tool behavior changes, update this file and memory.
 
+## Claude Code — specific operating notes
+
+- Reads `CLAUDE.md` from repo root automatically at session start
+- Operates via worktrees (`claude/YYYYMMDD-description`) for code changes
+- Leaves tasks for Codex in `docs/temp/codex-personal/tasks/`
+- Leaves plans for itself in `docs/temp/claude-personal/plans/`
+- When acting as externo: reads everything, leaves files in temp, uses external-inbox for formal tasks
+- Session guide: `docs/claude/session-guide.md`
+- Worktree rules: `docs/claude/worktree-protocol.md`
+
 ## Common rule for all tools
 
 - all tools must follow `docs/collab/protocol.md`
@@ -16,7 +26,7 @@ This matrix is for safe project operations, not marketing claims. If any tool be
 | Tool / App | Typical Strength | Typical Risk | CloneWatch Role |
 |---|---|---|---|
 | ChatGPT (desktop/web) | Fast architectural and coding iteration | Context truncation if logs/memory are skipped | Full writer (with lock protocol) |
-| Claude Desktop / Claude Code | Strong coding and refactor support | Can drift if handoff discipline is weak | Full writer (with lock protocol) |
+| Claude Desktop / Claude Code | Strong coding, refactor, analysis, multi-file coordination, deep doc synthesis | Can drift across sessions if handoff discipline is weak — mitigated by CLAUDE.md | Full writer (with lock protocol); operates as externo analyst when another agent holds lock |
 | Perplexity | Research and cross-source synthesis | Can provide stale or non-authoritative implementation assumptions | Research assistant + optional doc writer |
 | Google Antigravity | Agentic development workflows | Workflow assumptions may differ from local project controls | Writer only when lock + local guards are respected |
 | Manus Desktop ("My Computer") | Computer-use and operational automation | Higher risk of accidental broad actions on host machine | Restricted writer; prefer docs/ops tasks unless explicitly scoped |

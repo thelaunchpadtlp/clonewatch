@@ -1,0 +1,12 @@
+{
+  "agent_id": "gemini",
+  "agent_app": "Google Gemini",
+  "account_type": "personal",
+  "capabilities": [
+    "read",
+    "write",
+    "web"
+  ],
+  "collab_role": "externo-analyst",
+  "owner_mapping": "The Launch Pad - TLP"
+}

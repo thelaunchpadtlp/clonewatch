@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clonewatch.local/schemas/session-record.schema.json",
+  "title": "SessionRecord",
+  "description": "Metadata and summary of an important project session",
+  "type": "object",
+  "required": [
+    "session_id",
+    "agent_app",
+    "owner",
+    "date_utc",
+    "description",
+    "key_decisions",
+    "implemented",
+    "deferred",
+    "raw_file_path"
+  ],
+  "properties": {
+    "session_id": { "type": "string", "description": "Unique session identifier from the agent platform" },
+    "agent_app": { "type": "string", "description": "Agent app that ran this session (e.g. ChatGPT-Codex, Claude Code)" },
+    "owner": { "type": "string", "description": "Human user running the session" },
+    "date_utc": { "type": "string", "format": "date", "description": "Date of session in UTC" },
+    "description": { "type": "string", "description": "One-paragraph summary of what this session was about" },
+    "model": { "type": "string", "description": "AI model used (e.g. gpt-5.4, claude-sonnet-4-6)" },
+    "key_decisions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of important decisions made in this session"
+    },
+    "implemented": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Features/changes actually implemented during this session"
+    },
+    "deferred": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Items explicitly deferred to future sessions"
+    },
+    "raw_file_path": {
+      "type": "string",
+      "description": "Local filesystem path to the raw session export file (JSONL or other format). NOT committed to git."
+    },
+    "raw_file_format": {
+      "type": "string",
+      "enum": ["jsonl", "json", "pdf", "md", "other"],
+      "description": "Format of the raw session file"
+    },
+    "raw_file_lines": {
+      "type": "integer",
+      "description": "Number of lines in the raw file (for size reference)"
+    },
+    "commits_produced": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Git commit SHAs produced in this session"
+    },
+    "open_issues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Issues or blockers still open at end of session"
+    },
+    "notes": { "type": "string", "description": "Any additional context or notes" }
+  },
+  "additionalProperties": false
+}

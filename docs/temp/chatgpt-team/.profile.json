@@ -1,0 +1,12 @@
+{
+  "agent_id": "chatgpt-team",
+  "agent_app": "ChatGPT (Team)",
+  "account_type": "team",
+  "capabilities": [
+    "read",
+    "write",
+    "web"
+  ],
+  "collab_role": "full-writer",
+  "owner_mapping": "The Launch Pad - TLP"
+}

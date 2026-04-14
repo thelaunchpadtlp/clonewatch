@@ -369,3 +369,20 @@ These are considered the active baseline automations for the current phase.
 - Local tooling observation:
   - a non-tracked `.claude/` directory appeared in the repo root after Claude Desktop interaction
   - for now it should be treated as local tool state, not canonical shared project state
+
+## Execution Checkpoint: Claude First Session (April 14, 2026)
+
+- Claude read full Codex session (4,749 JSONL lines) and performed gap analysis.
+- 7 critical gaps identified vs Codex implementation.
+- Implemented in one session (as externo analyst, no lock needed for new files):
+  - `CLAUDE.md` + `docs/claude/` companions
+  - `docs/sessions/` subsystem (Sesiones Importantes) — schema, index, 2 records
+  - `docs/temp/` subsystem (Temporales por Externo) — 16 agent folders
+  - `docs/collab/current-state.md` — live project state
+  - `docs/collab/agent-capability-matrix.md` — Claude details added
+  - `clonewatch.md` — TOC + ESTADO ACTUAL + GLOSARIO added at top
+  - 3 Codex task files in `docs/temp/codex-personal/tasks/`
+- Raw session files stored locally:
+  - Codex: `/Users/piqui/Downloads/rollout-2026-04-14T02-17-48-019d8b11-6cb8-7290-b66a-9015d83bdd23.jsonl`
+  - Claude: `/Users/piqui/Downloads/6e5936df-08ce-4e2a-8745-b235e0083df7.jsonl`
+- Still pending: CI fix (user action: make repo public), Codex guard updates, clonewatch body headers.

@@ -4,6 +4,20 @@ All notable project changes are recorded here.
 
 ## 2026-04-14
 
+### Added (Claude Code session — externo analyst pass)
+
+- `CLAUDE.md` — root-level anchor for all Claude Code sessions (reads automatically)
+- `docs/claude/session-guide.md`, `worktree-protocol.md`, `handoff-template.md` — Claude operational companions
+- `docs/sessions/` — Sesiones Importantes subsystem: schema, session index, records for Codex and Claude founding sessions
+- `docs/temp/` — Temporales por Externo subsystem: 16 agent workspaces (codex-personal, codex-team, chatgpt-personal, chatgpt-team, antigravity, vertex-ai, gemini, cursor, lovable, replit, claude-personal, claude-team, perplexity-personal, perplexity-team, manus-personal, manus-team)
+- `docs/collab/current-state.md` — live project state quick reference (always read first)
+- 3 Codex task files in `docs/temp/codex-personal/tasks/` (CI fix, guards update, clonewatch restructure)
+
+### Changed (Claude Code session)
+
+- `clonewatch.md` — added navigation TOC, ESTADO ACTUAL block, GLOSARIO, and OPERATIONAL MEMORY UPDATES section marker at top
+- `docs/collab/agent-capability-matrix.md` — added Claude Code-specific operating notes and updated Claude row
+
 ### Added
 
 - macOS first-class adoption roadmap (`docs/roadmap/macos-first-class-adoption.md`)

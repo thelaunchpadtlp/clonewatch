@@ -1,6 +1,78 @@
 CloneWatch Project Memory (Updated)
 
-Overview
+---
+
+## NAVEGACIÓN RÁPIDA
+
+> **Siempre leer primero:** [Estado Actual](#estado-actual) — muestra el estado del proyecto en este momento.
+
+| Sección | Descripción |
+|---|---|
+| [Estado Actual](#estado-actual) | Estado operacional en tiempo real (lock, CI, pendientes urgentes) |
+| [Glosario](#glosario) | Términos clave del proyecto |
+| [Visión del Producto](#overview) | Qué es CloneWatch y de dónde viene |
+| [Metas Originales](#original-goals) | Objetivos fundacionales |
+| [Arquitectura](#current-reframing-of-the-product) | Estructura actual v2 |
+| [Filosofía de Evidencia](#evidence-philosophy) | Cómo se documenta todo |
+| [Log Operacional Histórico](#operational-memory-updates) | Todas las actualizaciones fechadas (append-only) |
+
+**Documentos clave relacionados:**
+- `docs/collab/current-state.md` — estado vivo del proyecto (leer antes que este archivo)
+- `docs/architecture.md` — arquitectura técnica
+- `docs/collab/protocol.md` — protocolo Single Writer
+- `docs/roadmap/macos-first-class-adoption.md` — hoja de ruta y pendientes
+- `CLAUDE.md` — instrucciones operativas para Claude Code
+- `docs/sessions/index.md` — registro de sesiones importantes
+
+---
+
+## ESTADO ACTUAL
+
+> **Actualizar este bloque en cada sesión. No appendear — reemplazar.**
+
+*Última actualización: 2026-04-14 por Claude Code (sesión `6e5936df`)*
+
+| Campo | Estado |
+|---|---|
+| **Lock activo** | NINGUNO — workspace libre |
+| **CI (GitHub Actions)** | ROTO — todos los workflows fallan con `steps:[]` |
+| **Causa CI** | Minutos agotados en repo privado (cuenta/billing, no código) |
+| **Solución CI pendiente** | Hacer el repo público (ver `docs/github/actions-root-cause-incident.md`) |
+| **swift build** | PASA (local) |
+| **swift test** | PASA (7/7, local) |
+| **Último commit estable** | `95b9fae` |
+| **Pendiente más urgente** | CI fix + Codex actualizar guards + Help Solve subsystem |
+| **Próximo agente recomendado** | Codex o Claude (ver `docs/collab/current-state.md`) |
+
+---
+
+## GLOSARIO
+
+| Término | Definición |
+|---|---|
+| **externo** | Cualquier app/agente/IA/desarrollador externo al active writer session |
+| **Single Writer** | Modo por defecto: un solo escritor activo con lock en cualquier momento |
+| **CollabOps** | Sistema de gobernanza multi-agente del proyecto |
+| **lock** | Archivo `.clonewatch/agent-lock.json` que indica quién tiene permiso de escritura |
+| **handoff** | Documento de traspaso al finalizar una sesión |
+| **Memory Guard** | Workflow CI que fuerza actualización de memoria en commits importantes |
+| **Collab Guard** | Workflow CI que exige evidencia de sesión en cambios críticos |
+| **external-inbox** | `docs/collab/external-inbox/` — canal de entrada de tareas de externos |
+| **external-outbox** | `docs/collab/external-outbox/` — canal de salida de resultados a externos |
+| **Temporales por Externo** | `docs/temp/` — workspaces privados aislados por agente |
+| **Sesiones Importantes** | `docs/sessions/` — archivo de sesiones relevantes con sus decisiones |
+| **Gate A-D** | Sistema de gates hacia V1 productizado (ver `docs/roadmap/v1-productized-gates.md`) |
+
+---
+
+## OPERATIONAL MEMORY UPDATES
+
+> *Esta sección es append-only. Nuevas entradas van AL FINAL.*
+> *Para el estado actual, leer la sección [Estado Actual](#estado-actual) arriba.*
+
+---
+
+## Overview
 
 The CloneWatch project grew out of a desire to verify and track the progress of a large disk-to-disk clone. The conversation originally focused on cloning the contents of volume 1D3A to another volume 1D3B and ensuring the clone was complete before deleting the source drive. Over time, the discussion expanded first into a Python-based verification tool, and then into a much broader macOS-native platform for cloning, reinforcement, verification, storage migration, disk-topology awareness, and durable documentary evidence.
 
@@ -513,3 +585,23 @@ Operational memory update (April 14, 2026 - session pause handoff for Claude ins
 - Local note:
   - a non-tracked `.claude/` directory appeared in the repo root after Claude Desktop interaction
   - for now it is treated as local tool state rather than shared project state
+
+### Operational memory update: Claude first session — CLAUDE.md, Sesiones Importantes, Temporales por Externo (Apr 14, 2026)
+
+- Claude operated as externo analyst (Codex held workspace during Claude's analysis).
+- Claude read the full Codex JSONL session export (4,749 lines) and this Claude session (117 lines).
+- Gap analysis identified 7 critical gaps vs what Codex implemented.
+- Claude implemented the following in a single session:
+  - `CLAUDE.md` at repo root (anchor for all Claude Code sessions)
+  - `docs/claude/` — session-guide.md, worktree-protocol.md, handoff-template.md
+  - `docs/sessions/` — Sesiones Importantes subsystem with schema, index, and 2 session records
+  - `docs/temp/` — Temporales por Externo subsystem with 16 agent folders (profile + README each)
+  - `docs/collab/current-state.md` — live project state quick reference
+  - `docs/collab/agent-capability-matrix.md` updated with Claude-specific operating notes
+  - `clonewatch.md` TOC + ESTADO ACTUAL + GLOSARIO navigation added at top
+  - 3 task files for Codex in `docs/temp/codex-personal/tasks/`
+- Pending (for Codex):
+  - TASK-CLAUDE-001: Fix GitHub Actions CI (make repo public)
+  - TASK-CLAUDE-002: Update CI guards to exclude docs/temp/ and docs/sessions/
+  - TASK-CLAUDE-003: Add markdown headers to clonewatch.md body
+- GitHub Actions still failing (steps:[]) — requires user to make repo public.

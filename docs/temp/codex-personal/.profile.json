@@ -1,0 +1,14 @@
+{
+  "agent_id": "codex-personal",
+  "agent_app": "ChatGPT-Codex",
+  "account_type": "personal",
+  "capabilities": [
+    "read",
+    "write",
+    "bash",
+    "web",
+    "file-system"
+  ],
+  "collab_role": "full-writer",
+  "owner_mapping": "The Launch Pad - TLP"
+}
