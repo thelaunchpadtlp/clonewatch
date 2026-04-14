@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-04-14T23:15:49.251705+00:00",
+  "agents": {
+    "claude-code": {
+      "app": "Claude Desktop (Code mode)",
+      "app_version": "1.2581.0",
+      "probe": "defaults read /Applications/Claude.app"
+    },
+    "codex": {
+      "app": "ChatGPT Codex Desktop",
+      "cli_version": "0.119.0-alpha.28",
+      "model": "gpt-5.4",
+      "probe": "~/.codex/config.toml + session_meta"
+    },
+    "claude-cowork": {
+      "app": "Claude Desktop (Cowork mode)",
+      "app_version": "1.2581.0",
+      "probe": "defaults read /Applications/Claude.app"
+    },
+    "xcode": {
+      "app": "Xcode",
+      "version": "26.4",
+      "probe": "xcodebuild -version"
+    },
+    "xcode-beta": {
+      "app": "Xcode Beta",
+      "version": "26.5",
+      "probe": "defaults read /Applications/Xcode-beta.app"
+    }
+  }
+}
