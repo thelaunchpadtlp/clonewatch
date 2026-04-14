@@ -2,7 +2,7 @@
 
 **This file is updated by each agent at session end. Always read this first.**
 
-Last updated: 2026-04-14 by Claude Code (session `6e5936df`, Wave 2)
+Last updated: 2026-04-14 by Claude Code (session `6e5936df`, Wave 3 — final close)
 
 ---
 
@@ -75,18 +75,27 @@ on the public repo.
 
 ---
 
+## CI state (final — all checks passing)
+
+PR #4 (`claude/wave2-automations-20260414`) is MERGEABLE:
+- CI build+test ✅ | Memory Guard ✅ | Collab Guard ✅ | Project Records Guard ✅ | CodeQL ✅
+- Merge when Codex is ready (or user can merge directly on GitHub)
+
+GitHub Actions: WORKING — repo is public, Actions runs are free and unlimited.
+CodeQL Default Setup: ACTIVE (user enabled it; runs in Security tab, free on public repos).
+
 ## Pending items (priority order)
 
-1. **USER: Fix GitHub billing** → allows CI to run
-2. **Codex: TASK-CLAUDE-001** — fix CI via PR (billing must be fixed first)
-3. **Codex: TASK-CLAUDE-002** — update CI guard paths to exclude docs/temp/ and docs/sessions/
-4. **Codex: TASK-CLAUDE-003** — add markdown headers to clonewatch.md body
-5. **PR: Merge Wave 2 work** — Claude will push PR with automations + session close
-6. **Next wave**: "Help Solve or Help Solve Better" subsystem design
-7. **Gate B**: macOS signing/notarization pipeline
-8. **NEXT tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
-9. **Pending integral**: Expanded accessibility (keyboard, VoiceOver)
-10. **Pending integral**: `.webloc` file for reports
+1. **Codex: Merge PR #4** — all checks passing, mergeable now
+2. **Codex: TASK-CLAUDE-002** — update CI guard paths to exclude docs/temp/ and docs/sessions/
+3. **Codex: TASK-CLAUDE-003** — add markdown headers to clonewatch.md body
+4. **Codex: TASK-CLAUDE-004** — add proprietary LICENSE file (All Rights Reserved)
+5. **TASK-CLAUDE-001 resolved** — CI now working (repo public = free Actions). No billing action needed.
+6. **Sprint A (next Claude session)**: run app end-to-end, test clone + verify + ledger flow
+7. **Next wave**: "Help Solve or Help Solve Better" subsystem design
+8. **Gate B**: macOS signing/notarization pipeline
+9. **NEXT tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
+10. **Pending**: Expanded accessibility, `.webloc` file for reports
 
 ---
 
