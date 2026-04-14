@@ -274,5 +274,68 @@ swift build && swift test
 
 ---
 
+---
+
+## 14. Checkpoint Protocol — Mandatory automations at key moments
+
+Claude runs `tools/collab/claude-checkpoint.sh` at specific triggers so memory, docs, and records stay current automatically. This replaces ad-hoc "remember to update" notes.
+
+```bash
+# Template (replace <TRIGGER> and fill --message):
+tools/collab/claude-checkpoint.sh \
+  --trigger <TRIGGER> \
+  --session-id "$SESSION_ID" \
+  --message "Short description of what happened"
+```
+
+### Triggers and what they do
+
+| Trigger | When to call | What it does |
+|---|---|---|
+| `SESSION_START` | First thing every session | Prints current-state, latest handoff, lock status, pending plans |
+| `PLAN_APPROVED` | After user says "yes, do it" | Creates plan stub in `docs/temp/claude-personal/plans/`, lists update obligations |
+| `TODO_DONE` | After each significant todo completes | Prints update checklist (clonewatch.md, CHANGELOG, current-state, roadmap) |
+| `FINDING` | After important discovery or investigation | Creates finding stub in `docs/temp/claude-personal/findings/`, lists escalation steps |
+| `PROBLEM_DETECTED` | After identifying blocker or significant issue | Creates problem stub in `docs/temp/claude-personal/problems/`, lists escalation steps |
+| `SESSION_END` | Before releasing lock | Prints full mandatory close checklist |
+
+### What gets updated at each trigger
+
+**`SESSION_START`** — read only, no writes. Surfaces context so Claude doesn't start blind.
+
+**`PLAN_APPROVED`** — writes plan stub. Claude must then:
+- Fill in the plan file
+- Update `docs/collab/current-state.md` pending section
+- Optionally note in `clonewatch.md` if architecture-level
+
+**`TODO_DONE`** — checklist only. Claude must then manually update whichever of these apply:
+- `clonewatch.md` (arch/runtime change)
+- `CHANGELOG.md` (product change)
+- `docs/roadmap/` (milestone)
+- `docs/collab/current-state.md` (pending items)
+
+**`FINDING`** — writes finding stub. Claude must then:
+- Fill in details in the finding file
+- Update `docs/project-memory.md` if finding is significant
+- Update `docs/collab/current-state.md` if it's a blocker
+- Create a task in `docs/temp/<agent>/tasks/` if another agent needs to act
+
+**`PROBLEM_DETECTED`** — writes problem stub. Claude must then:
+- Fill in root cause, impact, and solution
+- Update `docs/collab/current-state.md` blocker section
+- Optionally create an external task via `tools/collab/external-new-task.sh`
+
+**`SESSION_END`** — checklist only. Claude must complete all items before calling `release-lock.sh`:
+1. `swift build && swift test`
+2. Memory files updated (clonewatch.md, project-memory.md)
+3. CHANGELOG.md updated
+4. Session record finalized in `docs/sessions/records/`
+5. `current-state.md` updated
+6. `tools/collab/handoff.sh` called
+7. Commit and push (conventional format)
+8. `tools/collab/release-lock.sh` called
+
+---
+
 *This file is read automatically by Claude Code at session start.*
 *Update the "Date" field and any changed sections when you modify this file.*

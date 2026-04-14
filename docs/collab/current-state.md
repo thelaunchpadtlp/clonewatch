@@ -2,7 +2,7 @@
 
 **This file is updated by each agent at session end. Always read this first.**
 
-Last updated: 2026-04-14 by Claude Code (session `6e5936df`)
+Last updated: 2026-04-14 by Claude Code (session `6e5936df`, Wave 2)
 
 ---
 
@@ -11,8 +11,8 @@ Last updated: 2026-04-14 by Claude Code (session `6e5936df`)
 | Field | Value |
 |---|---|
 | Active lock | **NONE** — workspace is free |
-| Last holder | Codex (session `codex-20260414-185150`) |
-| Released at | 2026-04-14 ~18:52 UTC |
+| Last holder | Claude Code (session `6e5936df`) |
+| Released at | 2026-04-14 ~20:15 UTC |
 
 ---
 
@@ -21,31 +21,38 @@ Last updated: 2026-04-14 by Claude Code (session `6e5936df`)
 | Field | Value |
 |---|---|
 | Branch | `main` |
-| Last stable commit | `95b9fae` — "docs(collabops): record session pause guidance" |
+| Last stable commit | `b3eed0d` — "feat(collabops): add CLAUDE.md, Sesiones Importantes, Temporales por Externo" |
 | Local build | `swift build` PASSES |
 | Local tests | `swift test` PASSES (7/7) |
-| GitHub Actions | ALL FAILING — see blocker below |
+| GitHub Actions | FAILING — billing issue (see blocker) |
+| Pending PR | Wave 2 work to be pushed as PR (automations + session close) |
 
 ---
 
 ## Active blocker
 
-**GitHub Actions — all workflows fail pre-step (`steps: []`)**
+**GitHub Actions — billing/payment issue**
 
-- Cause: GitHub Actions minutes quota exhausted for private repo (account-level, not code)
-- Fix required: Make repo public OR upgrade GitHub plan
+- Cause: GitHub account payment has failed or spending limit needs to be increased
+- Confirmed via: `gh run view 24418476339` → annotation clearly states billing error
+- Previous diagnosis (minutes quota) was **incorrect** — corrected 2026-04-14
+- The main branch has a ruleset "Protect main" requiring 4 CI checks before merge
 - Detailed incident: `docs/github/actions-root-cause-incident.md`
 - External task: `docs/collab/external-inbox/EXT-ACTIONS-ROOTCAUSE-001.json`
-- Task for Codex to monitor: `docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md`
+- Task for Codex: `docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md`
 
-**Action required by user (not Codex, not Claude):**
-1. Go to `github.com/thelaunchpadtlp/clonewatch`
-2. Settings → General → Danger Zone → Change repository visibility → **Public**
-3. After that, tell Codex to push an empty commit to trigger CI
+**Action required by user:**
+1. Go to `https://github.com/settings/billing` (or org billing)
+2. Resolve payment failure or increase spending limit
+3. After billing is clear, tell Codex to open a PR for CI verification
+
+**Good news:** Repo is now PUBLIC (screenshot confirmed 2026-04-14). A CodeQL
+run auto-triggered. If billing is cleared, all standard workflow runs will be free
+on the public repo.
 
 ---
 
-## What was just completed (this Claude session)
+## What was completed in Wave 1 of this Claude session (commit `b3eed0d`)
 
 - Created `CLAUDE.md` (root anchor for Claude Code)
 - Created `docs/claude/` companion files (session-guide, worktree-protocol, handoff-template)
@@ -53,40 +60,54 @@ Last updated: 2026-04-14 by Claude Code (session `6e5936df`)
 - Created `docs/temp/` subsystem (Temporales por Externo) with 16 agent folders
 - Created `docs/collab/current-state.md` (this file)
 - Updated `docs/collab/agent-capability-matrix.md` with Claude details
-- Added SQLite WAL/SHM to `.gitignore`
-- Added TOC to `clonewatch.md`
-- Left 3 tasks for Codex in `docs/temp/codex-personal/tasks/`
+- Added navigation + ESTADO ACTUAL to `clonewatch.md`
+- Left 3 task files for Codex in `docs/temp/codex-personal/tasks/`
 - Updated `clonewatch.md`, `docs/project-memory.md`, `CHANGELOG.md`
+
+## What was completed in Wave 2 of this Claude session (PR pending)
+
+- Created `tools/collab/claude-checkpoint.sh` — automation trigger script
+- Added Section 14 (Checkpoint Protocol) to `CLAUDE.md`
+- Corrected TASK-CLAUDE-001 root cause (billing, not minutes)
+- Wrote `docs/temp/codex-personal/BRIEFING-FROM-CLAUDE-20260414.md` for Codex
+- Updated this file and session record
+- Wrote session handoff
 
 ---
 
-## Pending integrals (priority order)
+## Pending items (priority order)
 
-1. **Fix GitHub Actions** (user action: make repo public)
-2. **Codex: Update CI guards** to exclude `docs/temp/` and `docs/sessions/` from guard checks (`TASK-CLAUDE-002`)
-3. **Codex: Add navigation to clonewatch.md body** — add section headers to the 500-line history (`TASK-CLAUDE-003`)
-4. **Next wave design**: "Help Solve or Help Solve Better" subsystem
-5. **Gate B**: macOS signing/notarization pipeline
-6. **NEXT tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
-7. **Pending integral**: Expanded accessibility (keyboard, VoiceOver)
-8. **Pending integral**: `.webloc` file for reports (historical user request)
+1. **USER: Fix GitHub billing** → allows CI to run
+2. **Codex: TASK-CLAUDE-001** — fix CI via PR (billing must be fixed first)
+3. **Codex: TASK-CLAUDE-002** — update CI guard paths to exclude docs/temp/ and docs/sessions/
+4. **Codex: TASK-CLAUDE-003** — add markdown headers to clonewatch.md body
+5. **PR: Merge Wave 2 work** — Claude will push PR with automations + session close
+6. **Next wave**: "Help Solve or Help Solve Better" subsystem design
+7. **Gate B**: macOS signing/notarization pipeline
+8. **NEXT tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
+9. **Pending integral**: Expanded accessibility (keyboard, VoiceOver)
+10. **Pending integral**: `.webloc` file for reports
 
 ---
 
 ## Next recommended agent
 
-**Either Codex or Claude** — both can proceed.
+**Codex** — Claude is pausing for a Mac app update.
 
-For Codex:
+Priority path for Codex:
 ```bash
+# 1. Read full briefing Claude wrote for you:
+cat docs/temp/codex-personal/BRIEFING-FROM-CLAUDE-20260414.md
+
+# 2. Your tasks in order:
 cat docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md
 cat docs/temp/codex-personal/tasks/TASK-CLAUDE-002-GUARDS-UPDATE.md
 cat docs/temp/codex-personal/tasks/TASK-CLAUDE-003-CLONEWATCH-RESTRUCTURE.md
 ```
 
-For Claude:
+**When Claude returns:**
 ```bash
 cat CLAUDE.md  # (loaded automatically)
 cat docs/collab/current-state.md  # this file
-cat docs/collab/handoffs/$(ls -t docs/collab/handoffs/ | head -1)
+cat docs/collab/handoffs/$(ls -t docs/collab/handoffs/ | grep -v template | head -1)
 ```

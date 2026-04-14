@@ -15,7 +15,7 @@
 
 ## Description
 
-Claude's first session on the CloneWatch project. Claude operated as an externo analyst (Codex held the workspace). Claude performed a comprehensive read of all project files, identified 7 critical gaps in the project, and proposed improvements. Claude then received the Codex session JSONL export, analyzed the full conversation history, and executed a major implementation pass: CLAUDE.md, docs/claude/ companion files, docs/sessions/ subsystem, docs/temp/ subsystem, docs/collab/current-state.md, and delegation tasks for Codex.
+Claude's first session on the CloneWatch project. Claude operated as an externo analyst (Codex held the workspace for Wave 1 of the session). Wave 1: comprehensive read of all project files, identification of 7 critical gaps, implementation of a major documentation + governance wave (53 files, commit `b3eed0d`). Wave 2: automation checkpoint system, corrected CI root cause diagnosis, Codex briefing, session close materials (PR pending at end of session).
 
 ## Key decisions made
 
@@ -28,9 +28,14 @@ Claude's first session on the CloneWatch project. Claude operated as an externo 
 - clonewatch.md restructured with TOC + ESTADO ACTUAL section (without deleting history)
 - session-log.jsonl WAL/SHM files added to .gitignore
 - Claude's worktree convention: `claude/YYYYMMDD-description`
-- GitHub Actions fix: make repo public (removes minutes quota constraint)
+- GitHub Actions root cause: **billing/payment issue** (original diagnosis of minutes-quota was wrong)
+- Automation checkpoints: 6 triggers (SESSION_START, PLAN_APPROVED, TODO_DONE, FINDING, PROBLEM_DETECTED, SESSION_END) each with defined update obligations
+- claude-checkpoint.sh script to enforce checkpoint obligations at each trigger
+- Codex must create PRs (not push to main directly) because of the "Protect main" ruleset
 
 ## Implemented during this session
+
+### Wave 1 (commit `b3eed0d` on main)
 
 - `CLAUDE.md` — root-level anchor for all Claude sessions
 - `docs/claude/session-guide.md` — detailed step-by-step operational guide
@@ -39,7 +44,7 @@ Claude's first session on the CloneWatch project. Claude operated as an externo 
 - `docs/sessions/README.md` — subsystem overview
 - `docs/sessions/schema/session-record.schema.json` — session record schema
 - `docs/sessions/records/codex-session-20260414-001.md` — Codex session record
-- `docs/sessions/records/claude-session-20260414-001.md` — this record
+- `docs/sessions/records/claude-session-20260414-001.md` — this record (initial version)
 - `docs/sessions/index.md` — master index of sessions
 - `docs/temp/README.md` — Temporales por Externo policy
 - `docs/temp/_inventory.md` — subsystem inventory
@@ -57,23 +62,46 @@ Claude's first session on the CloneWatch project. Claude operated as an externo 
 - `clonewatch.md` + `docs/project-memory.md` — new operational memory entries
 - `CHANGELOG.md` — updated
 
+### Wave 2 (PR pending)
+
+- `tools/collab/claude-checkpoint.sh` — automation trigger script (6 trigger types)
+- `CLAUDE.md` Section 14 — Checkpoint Protocol (automation docs)
+- `docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md` — corrected root cause
+- `docs/temp/codex-personal/BRIEFING-FROM-CLAUDE-20260414.md` — full Codex briefing
+- `docs/collab/current-state.md` — updated for session close (Wave 2 state)
+- `docs/collab/handoffs/20260414-201500-Claude.md` — session handoff
+- `docs/sessions/records/claude-session-20260414-001.md` — this record (final version)
+
 ## Deferred
 
-- Full restructure of clonewatch.md body (adding Codex task for it)
-- CI fix execution (requires user to make repo public, then Codex can monitor)
+- Full restructure of clonewatch.md body (delegated to Codex in TASK-CLAUDE-003)
+- CI fix execution (requires billing fix by user, then Codex creates PR)
 - "Help Solve or Help Solve Better" subsystem (major design work, next wave)
 - Privileged XPC helper design
 - macOS signing/notarization pipeline (Gate B)
+- Settings scene (Cmd+,), App Intents, Notification pipeline (NEXT tier)
 
 ## Open issues at end of session
 
-- GitHub Actions still failing (`steps: []`) — requires user to make repo public
-- After making public, Codex should run `git push` to trigger and verify CI
-- clonewatch.md body navigation still needs work (headers inside 500-line history)
+- GitHub Actions failing — billing/payment issue on GitHub account (user must resolve)
+- Wave 2 PR not yet pushed (push was blocked by CI requirement on main branch ruleset)
+- clonewatch.md body navigation needs markdown headers (Codex task)
 
 ## Notes
 
-Claude operated in worktree `claude/ecstatic-noether` for this session.
-No lock was claimed (Codex held the workspace, Claude was externo analyst).
+Claude operated in worktree `claude/ecstatic-noether` for part of this session.
+Lock was NOT claimed for Wave 1 (Codex held workspace, Claude was externo analyst).
+Lock was NOT claimed for Wave 2 either (no lock was needed — no Swift code changed).
 All created files are new (no conflicts with existing files expected).
 Session deeplink: Claude Code session `6e5936df-08ce-4e2a-8745-b235e0083df7`
+
+## Key finding: CI root cause corrected
+
+The original root cause documented for the Actions blocker was "private repo minutes exhaustion."
+This was incorrect. The actual cause, confirmed via `gh run view 24418476339`, is:
+
+> "The job was not started because recent account payments have failed or your spending limit needs to be increased."
+
+This means the fix requires resolving a billing issue on the GitHub account, not just making the repo public (though making it public does grant free Actions minutes for public repos, so it helps if billing is also resolved).
+
+The `docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md` file was updated with this correction.
