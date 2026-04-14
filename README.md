@@ -65,6 +65,17 @@ Suggested branch strategy:
 - `fix/...`: bug fixes
 - `docs/...`: documentation-only changes
 
+## GitHub automation in this repo
+
+This repo now includes baseline GitHub automation:
+
+- `CI`: builds and tests the project on pushes and pull requests
+- `Docs History Validation`: reruns the chat-history extraction pipeline and fails if generated files were not committed
+- `CodeQL`: scans the Swift codebase for security issues
+- `Dependabot`: proposes updates for GitHub Actions and Swift dependencies
+
+These automations are healthy because they protect quality and security without making uncontrolled changes to your code.
+
 ## Current status
 
 This repo has been bootstrapped locally but may still need GitHub authentication on this Mac before `git push` works from Terminal.

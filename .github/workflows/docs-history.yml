@@ -1,0 +1,40 @@
+name: Docs History Validation
+
+on:
+  push:
+    paths:
+      - "Sources/CloneWatchDocsTool/**"
+      - "docs/chat-history/raw-pdfs/**"
+      - "docs/chat-history/extracted/**"
+      - "docs/chat-history/canonical-transcript.md"
+      - "docs/chat-history/reconstruction-notes.md"
+      - "Package.swift"
+  pull_request:
+    paths:
+      - "Sources/CloneWatchDocsTool/**"
+      - "docs/chat-history/raw-pdfs/**"
+      - "docs/chat-history/extracted/**"
+      - "docs/chat-history/canonical-transcript.md"
+      - "docs/chat-history/reconstruction-notes.md"
+      - "Package.swift"
+  workflow_dispatch:
+
+jobs:
+  validate-doc-history:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild extracted chat history
+        run: swift run CloneWatchDocsTool
+
+      - name: Ensure generated docs are committed
+        run: |
+          if ! git diff --quiet; then
+            echo "Generated chat-history artifacts are out of date."
+            git status --short
+            git diff -- docs/chat-history
+            exit 1
+          fi
