@@ -14,7 +14,8 @@ public struct LedgerEngine: Sendable {
         sourceSnapshot: InventorySnapshot,
         destinationSnapshot: InventorySnapshot,
         verification: VerificationResult,
-        runLog: [RunLogEvent]
+        runLog: [RunLogEvent],
+        progressTimeline: [RunProgressSnapshot]
     ) throws -> LedgerOutput {
         let centralRoot = try centralRecordsRoot()
         let bundleRoot = centralRoot.appendingPathComponent(job.id.uuidString, isDirectory: true)
@@ -23,6 +24,7 @@ public struct LedgerEngine: Sendable {
         let reportEngine = ReportEngine()
         try FileSystemHelper.writeJSON(job, to: bundleRoot.appendingPathComponent("job-spec.json"))
         try FileSystemHelper.writeJSON(runLog, to: bundleRoot.appendingPathComponent("run-log.json"))
+        try FileSystemHelper.writeJSON(progressTimeline, to: bundleRoot.appendingPathComponent("run-progress.json"))
         try FileSystemHelper.writeJSON(verification, to: bundleRoot.appendingPathComponent("diff-report.json"))
         try FileSystemHelper.writeJSON(sourceSnapshot, to: bundleRoot.appendingPathComponent("source-index.json"))
         try FileSystemHelper.writeJSON(destinationSnapshot, to: bundleRoot.appendingPathComponent("destination-index.json"))
@@ -139,7 +141,8 @@ public struct LedgerEngine: Sendable {
             """
         }
         try FileSystemHelper.writeText(sql, to: tempSQL)
-        _ = try FileSystemHelper.runProcess("/usr/bin/sqlite3", [url.path, ".read", tempSQL.path])
+        let command = "sqlite3 \(shellQuoted(url.path)) < \(shellQuoted(tempSQL.path))"
+        _ = try FileSystemHelper.runProcess("/bin/sh", ["-lc", command])
         try? FileManager.default.removeItem(at: tempSQL)
     }
 
@@ -147,5 +150,9 @@ public struct LedgerEngine: Sendable {
         guard let string else { return "NULL" }
         let escaped = string.replacingOccurrences(of: "'", with: "''")
         return "'\(escaped)'"
+    }
+
+    private func shellQuoted(_ string: String) -> String {
+        "'" + string.replacingOccurrences(of: "'", with: "'\"'\"'") + "'"
     }
 }

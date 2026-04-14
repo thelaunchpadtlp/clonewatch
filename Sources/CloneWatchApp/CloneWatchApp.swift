@@ -50,6 +50,9 @@ final class CloneWizardViewModel: ObservableObject {
     @Published var lastError: String?
     @Published var isRunning = false
     @Published var detectedPreflight: PreflightResult?
+    @Published var runProgressTimeline: [RunProgressSnapshot] = []
+    @Published var latestProgress: RunProgressSnapshot?
+    @Published var showTechnicalLog = false
 
     func next() {
         if let next = WizardStep(rawValue: min(step.rawValue + 1, WizardStep.allCases.count - 1)) {
@@ -79,13 +82,22 @@ final class CloneWizardViewModel: ObservableObject {
     func runJob() {
         isRunning = true
         lastError = nil
+        runProgressTimeline = []
+        latestProgress = nil
+        showTechnicalLog = false
         statusMessage = "Running preflight, copy, inventory, verification, and ledger generation."
 
         let runtime = CloneWatchRuntime()
         let currentJob = job
         Task {
             do {
-                let result = try runtime.execute(job: currentJob)
+                let result = try runtime.execute(job: currentJob, onProgress: { snapshot in
+                    Task { @MainActor in
+                        self.latestProgress = snapshot
+                        self.runProgressTimeline.append(snapshot)
+                        self.statusMessage = snapshot.message
+                    }
+                })
                 await MainActor.run {
                     self.lastResult = result
                     self.statusMessage = "Job finished. A durable audit bundle was written to the central CloneWatch records folder and mirrored into source/destination."
@@ -99,6 +111,23 @@ final class CloneWizardViewModel: ObservableObject {
                     self.isRunning = false
                 }
             }
+        }
+    }
+
+    var phaseStates: [RunPhase: RunPhaseState] {
+        var states: [RunPhase: RunPhaseState] = [:]
+        for phase in RunPhase.allCases {
+            states[phase] = .pending
+        }
+        for snapshot in runProgressTimeline {
+            states[snapshot.phase] = snapshot.state
+        }
+        return states
+    }
+
+    var conciseRunLog: [String] {
+        runProgressTimeline.suffix(6).map { snapshot in
+            "\(snapshot.phase.displayName): \(snapshot.message)"
         }
     }
 
@@ -327,14 +356,148 @@ struct RunStepView: View {
                 .font(.system(size: 28, weight: .bold, design: .serif))
             Text("When you start, CloneWatch will run preflight checks, copy the data, scan both trees, compare them, and write an audit bundle in three places.")
                 .foregroundStyle(.secondary)
+            if let latest = viewModel.latestProgress {
+                ProgressView(value: latest.overallPercent, total: 100)
+                    .accessibilityLabel("Global run progress")
+                    .accessibilityValue("\(Int(latest.overallPercent)) percent")
+                HStack {
+                    Text("Progress: \(Int(latest.overallPercent))%")
+                        .font(.headline)
+                    Spacer()
+                    Text("Current phase: \(latest.phase.displayName)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            } else if viewModel.isRunning {
+                ProgressView(value: 0.02, total: 1.0)
+                    .accessibilityLabel("Global run progress")
+                    .accessibilityValue("Starting")
+            }
             CalloutCard(
                 title: "Evidence bundle",
                 message: "The bundle includes JSON, Markdown, HTML, and SQLite files so you can inspect the result from the app, Terminal, or another device."
             )
+            if let latest = viewModel.latestProgress {
+                RunNarrativeCard(snapshot: latest)
+            }
+            PhaseTimelineView(viewModel: viewModel)
+            if !viewModel.conciseRunLog.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Latest summary log")
+                        .font(.headline)
+                    ForEach(viewModel.conciseRunLog, id: \.self) { line in
+                        Text("• \(line)")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .accessibilityLabel("Summary run log")
+            }
             if viewModel.isRunning {
                 ProgressView("CloneWatch is working...")
                     .progressViewStyle(.linear)
+                    .accessibilityLabel("CloneWatch is processing data")
             }
+            DisclosureGroup("Technical log", isExpanded: $viewModel.showTechnicalLog) {
+                ScrollView {
+                    let technicalEvents = viewModel.lastResult?.runLog ?? []
+                    if technicalEvents.isEmpty {
+                        Text("Technical log will appear after the run finishes.")
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(Array(technicalEvents.enumerated()), id: \.offset) { _, event in
+                                Text("[\(event.level.uppercased())] \(event.message)")
+                                    .font(.caption.monospaced())
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+                }
+                .frame(maxHeight: 160)
+            }
+        }
+    }
+}
+
+struct RunNarrativeCard: View {
+    let snapshot: RunProgressSnapshot
+
+    var body: some View {
+        let explanation = explanationForPhase(snapshot.phase)
+        VStack(alignment: .leading, spacing: 8) {
+            Text("What is happening now")
+                .font(.headline)
+            Text(explanation.current)
+                .foregroundStyle(.secondary)
+            Text("Why it matters: \(explanation.why)")
+                .foregroundStyle(.secondary)
+            Text("Decision unlocked later: \(explanation.next)")
+                .foregroundStyle(.secondary)
+            if let files = snapshot.estimatedTransferFiles, let bytes = snapshot.estimatedTransferBytes {
+                Text("Estimated transfer scope: \(files) files, \(bytes) bytes.")
+                    .font(.subheadline.weight(.semibold))
+            }
+        }
+        .padding()
+        .background(Color.white.opacity(0.75))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityLabel("Current phase explanation")
+    }
+
+    private func explanationForPhase(_ phase: RunPhase) -> (current: String, why: String, next: String) {
+        switch phase {
+        case .preflight:
+            return ("CloneWatch validates paths and safety assumptions.", "It prevents risky or invalid copy targets.", "Whether the run can proceed.")
+        case .dryRun:
+            return ("CloneWatch estimates what would change before writing.", "You get a preview of copy scope.", "How heavy the copy will be.")
+        case .copy:
+            return ("CloneWatch copies the required changes.", "Data is moved incrementally and efficiently.", "Whether the clone content is updated.")
+        case .sourceScan:
+            return ("CloneWatch inventories the source tree.", "This creates evidence of what existed in origin.", "What baseline we compare against.")
+        case .destinationScan:
+            return ("CloneWatch inventories the destination tree.", "This captures what the clone actually contains.", "Whether there are mismatches.")
+        case .verify:
+            return ("CloneWatch compares source and destination indexes.", "This determines trust/confidence level.", "Whether source can be archived/deleted safely.")
+        case .ledger:
+            return ("CloneWatch writes durable audit artifacts.", "You get reusable proof and diagnostics.", "How to review and act later.")
+        }
+    }
+}
+
+struct PhaseTimelineView: View {
+    @ObservedObject var viewModel: CloneWizardViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Phase timeline")
+                .font(.headline)
+            ForEach(RunPhase.allCases) { phase in
+                HStack {
+                    Circle()
+                        .fill(colorForState(viewModel.phaseStates[phase] ?? .pending))
+                        .frame(width: 10, height: 10)
+                    Text(phase.displayName)
+                    Spacer()
+                    Text((viewModel.phaseStates[phase] ?? .pending).rawValue.capitalized)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding()
+        .background(Color.white.opacity(0.75))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityLabel("Run phase timeline")
+    }
+
+    private func colorForState(_ state: RunPhaseState) -> Color {
+        switch state {
+        case .pending: return .gray.opacity(0.35)
+        case .running: return .orange
+        case .completed: return .green
+        case .failed: return .red
+        case .skipped: return .blue
         }
     }
 }

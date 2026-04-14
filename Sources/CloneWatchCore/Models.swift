@@ -358,6 +358,75 @@ public struct RunLogEvent: Codable, Sendable {
     }
 }
 
+public enum RunPhase: String, Codable, CaseIterable, Identifiable, Sendable {
+    case preflight
+    case dryRun = "dry-run"
+    case copy
+    case sourceScan = "source-scan"
+    case destinationScan = "destination-scan"
+    case verify
+    case ledger
+
+    public var id: String { rawValue }
+
+    public var displayName: String {
+        switch self {
+        case .preflight: return "Preflight"
+        case .dryRun: return "Dry Run"
+        case .copy: return "Copy"
+        case .sourceScan: return "Scan Source"
+        case .destinationScan: return "Scan Destination"
+        case .verify: return "Verify"
+        case .ledger: return "Write Ledger"
+        }
+    }
+}
+
+public enum RunPhaseState: String, Codable, Sendable {
+    case pending
+    case running
+    case completed
+    case failed
+    case skipped
+}
+
+public struct RunProgressSnapshot: Codable, Sendable, Identifiable {
+    public var id: UUID
+    public var timestamp: Date
+    public var phase: RunPhase
+    public var state: RunPhaseState
+    public var previousPhase: RunPhase?
+    public var overallPercent: Double
+    public var message: String
+    public var estimatedTransferFiles: Int64?
+    public var estimatedTransferBytes: Int64?
+    public var durationSeconds: Double?
+
+    public init(
+        id: UUID = UUID(),
+        timestamp: Date = Date(),
+        phase: RunPhase,
+        state: RunPhaseState,
+        previousPhase: RunPhase?,
+        overallPercent: Double,
+        message: String,
+        estimatedTransferFiles: Int64? = nil,
+        estimatedTransferBytes: Int64? = nil,
+        durationSeconds: Double? = nil
+    ) {
+        self.id = id
+        self.timestamp = timestamp
+        self.phase = phase
+        self.state = state
+        self.previousPhase = previousPhase
+        self.overallPercent = overallPercent
+        self.message = message
+        self.estimatedTransferFiles = estimatedTransferFiles
+        self.estimatedTransferBytes = estimatedTransferBytes
+        self.durationSeconds = durationSeconds
+    }
+}
+
 public struct AuditBundleManifest: Codable, Sendable {
     public var jobID: UUID
     public var generatedAt: Date

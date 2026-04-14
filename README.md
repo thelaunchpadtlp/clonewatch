@@ -94,3 +94,4 @@ Default execution policy (from now on):
 
 - After implementing agreed changes and running relevant checks, Codex will push to `origin/main` automatically unless the user explicitly says not to push.
 - If a push involves non-obvious risk (for example destructive behavior, major refactors, or unresolved failures), Codex should pause and request confirmation before pushing.
+- When a plan is approved, memory update is mandatory as the first implementation step (`clonewatch.md` + `docs/project-memory.md`).

@@ -154,3 +154,54 @@ These are considered the active baseline automations for the current phase.
   - incremental copy argument behavior
   - dry-run summary parsing
   - size-only vs metadata verification behavior
+
+## Plan-Approval Memory Automation (April 14, 2026)
+
+- User requirement adopted: every approved plan must trigger immediate memory update before implementation work.
+- Integrated into project governance:
+  - policy documented in `README.md`
+  - policy documented in `CONTRIBUTING.md`
+  - formal decision record added: `docs/decisions/plan-approval-memory-policy.md`
+- Guardrail reinforcement:
+  - `Memory Guard` now ignores Dependabot bot noise
+  - `Memory Guard` also treats `docs/decisions/**` and `docs/plans/**` changes as memory-requiring changes
+
+## Session Traceability Notes (April 14, 2026)
+
+- Added policy for storing session metadata as operational trace data.
+- Added registry entry with:
+  - session id
+  - codex deeplink
+  - working directory
+- Practical guidance:
+  - session ids can change over time
+  - keep canonical project memory in durable docs, not tied to one session id
+
+## Execution Checkpoint (Pre-fix) (April 14, 2026)
+
+- User requested token-efficient correction pass with memory update before and after execution.
+- Active issue to solve:
+  - failing test `runtimeEmitsProgressSnapshotsForDocumentOnlyRun`
+  - failure source currently tied to SQLite import command path in ledger generation
+- Execution target:
+  - apply robust SQLite command fix
+  - stabilize progress architecture changes already in-flight
+  - restore full test green state
+
+## Execution Checkpoint (Post-fix) (April 14, 2026)
+
+- SQLite ledger generation was fixed robustly:
+  - switched from brittle `.read` argument invocation to shell-safe SQLite import via redirected SQL file
+- Progress architecture was integrated:
+  - serializable run progress model (`RunPhase`, `RunProgressSnapshot`)
+  - runtime progress timeline emission wired through execution phases
+  - ledger now exports `run-progress.json` for future agent/API consumption
+- Run UI foundation improved:
+  - progress percent, phase timeline, didactic narrative card, concise log, and technical log disclosure
+  - accessibility labels/values added on key progress controls
+- Governance improvements landed:
+  - `Memory Guard` ignores Dependabot actor noise
+  - plan-approval memory-first policy documented and recorded
+  - session traceability policy and session registry added
+- Validation:
+  - `swift test` passed (all tests green)

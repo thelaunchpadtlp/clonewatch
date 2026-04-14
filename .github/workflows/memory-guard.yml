@@ -6,6 +6,7 @@ on:
 
 jobs:
   enforce-memory-update:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
 
     steps:
@@ -47,7 +48,7 @@ jobs:
           NEEDS_MEMORY="false"
           while IFS= read -r file; do
             [[ -z "$file" ]] && continue
-            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" == "README.md" ]] || [[ "$file" == "docs/architecture.md" ]] || [[ "$file" =~ ^\.github/workflows/ ]]; then
+            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" == "README.md" ]] || [[ "$file" == "docs/architecture.md" ]] || [[ "$file" =~ ^docs/decisions/ ]] || [[ "$file" =~ ^docs/plans/ ]] || [[ "$file" =~ ^\.github/workflows/ ]]; then
               NEEDS_MEMORY="true"
               break
             fi

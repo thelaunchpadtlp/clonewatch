@@ -1,11 +1,24 @@
 import Foundation
 
+public enum CopyProgressEvent: Sendable {
+    case skipped
+    case dryRunStarted
+    case dryRunCompleted(summary: DryRunSummary?)
+    case copyStarted
+    case copyCompleted
+}
+
 public struct CopyEngine: Sendable {
     public init() {}
 
-    public func copy(job: CloneJob, logger: inout [RunLogEvent]) throws {
+    public func copy(
+        job: CloneJob,
+        logger: inout [RunLogEvent],
+        onProgress: ((CopyProgressEvent) -> Void)? = nil
+    ) throws {
         if job.intent == .verifyExistingClone || job.intent == .documentOnly {
             logger.append(RunLogEvent(level: "info", message: "Skipping copy phase because the job intent is \(job.intent.rawValue)."))
+            onProgress?(.skipped)
             return
         }
 
@@ -26,11 +39,13 @@ public struct CopyEngine: Sendable {
                 )
             )
         }
+        onProgress?(.dryRunStarted)
         let dryRunOutput = try FileSystemHelper.runProcess(
             "/usr/bin/rsync",
             dryRunArguments(for: arguments)
         )
-        if let summary = parseDryRunSummary(dryRunOutput) {
+        let summary = parseDryRunSummary(dryRunOutput)
+        if let summary {
             logger.append(
                 RunLogEvent(
                     level: "info",
@@ -40,11 +55,14 @@ public struct CopyEngine: Sendable {
         } else {
             logger.append(RunLogEvent(level: "info", message: "Dry-run completed. Could not parse transfer counts from rsync output."))
         }
+        onProgress?(.dryRunCompleted(summary: summary))
 
         logger.append(RunLogEvent(level: "info", message: "Starting rsync copy from \(source) to \(destination)."))
+        onProgress?(.copyStarted)
         let rsyncOutput = try FileSystemHelper.runProcess("/usr/bin/rsync", arguments)
         logger.append(RunLogEvent(level: "info", message: rsyncOutput))
         logger.append(RunLogEvent(level: "info", message: "Copy phase finished successfully."))
+        onProgress?(.copyCompleted)
     }
 
     func buildRsyncArguments(job: CloneJob) -> [String] {
@@ -89,7 +107,12 @@ public struct CopyEngine: Sendable {
     }
 }
 
-struct DryRunSummary: Sendable, Equatable {
-    let transferredFiles: Int64
-    let transferredBytes: Int64
+public struct DryRunSummary: Sendable, Equatable, Codable {
+    public let transferredFiles: Int64
+    public let transferredBytes: Int64
+
+    public init(transferredFiles: Int64, transferredBytes: Int64) {
+        self.transferredFiles = transferredFiles
+        self.transferredBytes = transferredBytes
+    }
 }

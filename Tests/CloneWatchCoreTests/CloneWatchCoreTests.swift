@@ -1,5 +1,6 @@
 import Testing
 @testable import CloneWatchCore
+import Foundation
 
 @Test
 func verificationFlagsMissingDestinationEntries() async throws {
@@ -110,4 +111,33 @@ func verificationMetadataFlagsPermissionDifferences() async throws {
     let result = VerificationEngine().compare(source: source, destination: destination, mode: .metadata)
     #expect(result.summary.warningCount == 1)
     #expect(result.differences.first?.status == .differentMetadata)
+}
+
+@Test
+func runtimeEmitsProgressSnapshotsForDocumentOnlyRun() async throws {
+    let tempRoot = URL(fileURLWithPath: NSTemporaryDirectory())
+        .appendingPathComponent("clonewatch-tests-\(UUID().uuidString)", isDirectory: true)
+    let source = tempRoot.appendingPathComponent("source", isDirectory: true)
+    let destination = tempRoot.appendingPathComponent("destination", isDirectory: true)
+    try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+    try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+    try "hello".write(to: source.appendingPathComponent("a.txt"), atomically: true, encoding: .utf8)
+    defer { try? FileManager.default.removeItem(at: tempRoot) }
+
+    let job = CloneJob(
+        source: Endpoint(kind: .folder, path: source.path),
+        destination: Endpoint(kind: .folder, path: destination.path),
+        intent: .documentOnly,
+        copyMode: .incremental
+    )
+
+    var snapshots: [RunProgressSnapshot] = []
+    let result = try CloneWatchRuntime().execute(job: job, onProgress: { snapshots.append($0) })
+
+    #expect(!snapshots.isEmpty)
+    #expect(result.progressTimeline.count == snapshots.count)
+    #expect(snapshots.contains(where: { $0.phase == .preflight && $0.state == .completed }))
+    #expect(snapshots.contains(where: { $0.phase == .dryRun && $0.state == .skipped }))
+    #expect(snapshots.contains(where: { $0.phase == .copy && $0.state == .skipped }))
+    #expect(snapshots.contains(where: { $0.phase == .ledger && $0.state == .completed }))
 }

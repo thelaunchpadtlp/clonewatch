@@ -296,3 +296,50 @@ Operational memory update (April 14, 2026 - integrated 1-3 implementation pass)
 - Reliability:
   - new tests added for dry-run parsing, incremental argument building, and verification-mode behavior
   - test suite passed after changes
+
+Operational memory update (April 14, 2026 - plan-approval memory first)
+
+- User requested memory updates to happen automatically every time a plan is approved.
+- Project decision accepted and institutionalized:
+  - memory update is now the first required step after plan approval
+  - applies before implementation changes start
+- Governance updates:
+  - policy documented in `README.md` and `CONTRIBUTING.md`
+  - decision file added: `docs/decisions/plan-approval-memory-policy.md`
+  - `Memory Guard` expanded to include `docs/decisions/**` and `docs/plans/**` as memory-sensitive paths
+  - `Memory Guard` now ignores Dependabot actor noise to keep signal focused on human changes
+
+Operational memory update (April 14, 2026 - session metadata traceability)
+
+- User proposed storing session id, deeplink, and working directory inside project records.
+- Decision adopted with constraints:
+  - session metadata is useful for operational continuity and resume flows
+  - session metadata must remain auxiliary (not a hard dependency for product behavior)
+  - session ids/deeplinks may change between sessions
+- Added:
+  - `docs/decisions/session-traceability-policy.md`
+  - `docs/decisions/session-registry.md` with the provided session reference
+
+Operational memory update (April 14, 2026 - pre-execution checkpoint)
+
+- User requested an efficient corrective pass with memory update before and after execution.
+- Immediate technical blocker identified:
+  - failing runtime test around ledger SQLite generation (`sqlite3` invocation shape).
+- Planned immediate action:
+  - correct SQLite import invocation in a robust way
+  - finish progress-flow integration already in-flight
+  - run full tests, then update post-execution memory and push to GitHub
+
+Operational memory update (April 14, 2026 - post-execution completion)
+
+- Execution goals were completed in one efficient pass:
+  - robust fix for failing SQLite ledger test path
+  - progress orchestration integrated end-to-end (phases, timeline, percent, event stream)
+  - run UI upgraded for didactic visibility and basic accessibility
+  - machine-consumable progress artifact added (`run-progress.json`)
+  - Memory Guard noise reduction and policy governance updates integrated
+- Test status after completion:
+  - full `swift test` suite passed
+- Delivery discipline satisfied:
+  - memory updated before execution and after execution
+  - pending changes are ready for commit/push
