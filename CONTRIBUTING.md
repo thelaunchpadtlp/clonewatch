@@ -38,3 +38,4 @@ swift run CloneWatchDocsTool
 - This workspace can use SSH push to `origin`; use direct pushes intentionally and only with reviewed commit scope
 - Default assistant workflow in this workspace: implement -> validate -> update memory -> commit -> `push origin` automatically (unless user says otherwise)
 - If a plan was explicitly approved by the user, perform memory update first before implementation changes
+- For major changes, update strategy/delivery records too (`CHANGELOG.md` and/or `docs/roadmap/macos-first-class-adoption.md`)

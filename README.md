@@ -13,6 +13,7 @@ CloneWatch is a macOS-first cloning, verification, and storage-migration project
 
 - `docs/roadmap/macos-first-class-adoption.md`: prioritized adoption map (Now / Next / Later / Pending integral)
 - `docs/decisions/macos-prioritization-framework.md`: decision rule for high-impact feature intake
+- `CHANGELOG.md`: detailed change history
 
 ## Current architecture
 
@@ -76,6 +77,7 @@ This repo now includes baseline GitHub automation:
 - `CodeQL` runs are prioritized for `main` and scheduled scans; Dependabot-triggered runs are skipped to reduce low-value noise
 - `Dependabot`: proposes batched monthly updates for GitHub Actions and Swift dependencies (limited concurrent PRs to reduce noise)
 - `Memory Guard`: if architecture/runtime/automation files change, memory files must also be updated in the same PR/commit (`clonewatch.md` or `docs/project-memory.md`)
+- `Project Records Guard`: major changes must update roadmap and/or changelog (`docs/roadmap/macos-first-class-adoption.md` or `CHANGELOG.md`)
 
 These automations are healthy because they protect quality and security without making uncontrolled changes to your code.
 

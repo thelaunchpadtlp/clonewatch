@@ -357,3 +357,14 @@ Operational memory update (April 14, 2026 - macOS ambition capture and integral 
 - Operating principle reinforced:
   - prioritize latest mainline CI signal for debugging
   - prevent older/bot run noise from derailing active delivery
+
+Operational memory update (April 14, 2026 - roadmap/changelog as inherent automation)
+
+- User requested that roadmap updates and changelog updates become default project behavior.
+- Implemented as project-level governance and automation:
+  - added `CHANGELOG.md`
+  - added workflow `.github/workflows/project-records-guard.yml`
+  - added decision record `docs/decisions/records-automation-policy.md`
+- Default behavior now:
+  - when major changes happen, strategy and change records are updated by default
+  - if not updated, CI guard fails

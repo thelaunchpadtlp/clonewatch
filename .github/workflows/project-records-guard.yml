@@ -1,0 +1,80 @@
+name: Project Records Guard
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  enforce-roadmap-and-changelog:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require roadmap/changelog update for major changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZERO_SHA="0000000000000000000000000000000000000000"
+          EVENT_NAME="${{ github.event_name }}"
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            BASE_REF="${{ github.base_ref }}"
+            git fetch origin "$BASE_REF" --depth=1
+            RANGE="origin/$BASE_REF...HEAD"
+          else
+            BEFORE_SHA="${{ github.event.before }}"
+            if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "$ZERO_SHA" ]]; then
+              RANGE="$BEFORE_SHA...HEAD"
+            else
+              RANGE="HEAD~1...HEAD"
+            fi
+          fi
+
+          CHANGED_FILES="$(git diff --name-only "$RANGE" || true)"
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if [[ -z "${CHANGED_FILES// }" ]]; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          NEEDS_RECORD_UPDATE="false"
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" =~ ^\.github/workflows/ ]] || [[ "$file" == "docs/architecture.md" ]]; then
+              NEEDS_RECORD_UPDATE="true"
+              break
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [[ "$NEEDS_RECORD_UPDATE" != "true" ]]; then
+            echo "No major code/automation/architecture changes detected."
+            exit 0
+          fi
+
+          HAS_RECORD_UPDATE="false"
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ "$file" == "CHANGELOG.md" ]] || [[ "$file" == "docs/roadmap/macos-first-class-adoption.md" ]]; then
+              HAS_RECORD_UPDATE="true"
+              break
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [[ "$HAS_RECORD_UPDATE" == "true" ]]; then
+            echo "Project records were updated."
+            exit 0
+          fi
+
+          echo "Project Records Guard failed."
+          echo "Major changes require updating at least one of:"
+          echo "- CHANGELOG.md"
+          echo "- docs/roadmap/macos-first-class-adoption.md"
+          exit 1

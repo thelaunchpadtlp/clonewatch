@@ -4,6 +4,10 @@ Date: 2026-04-14
 
 This roadmap converts the long checklist into an execution model that is ambitious but token/time efficient.
 
+Default intake rule:
+
+- when conversation logic implies a meaningful capability addition, it is added here by default (even if not explicitly requested as "update roadmap")
+
 ## North Star
 
 Build CloneWatch as a first-class macOS utility for non-technical users:

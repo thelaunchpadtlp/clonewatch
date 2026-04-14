@@ -218,3 +218,14 @@ These are considered the active baseline automations for the current phase.
 - Actions interpretation reinforcement:
   - investigate latest `main` run first
   - treat older/bot noise as secondary unless latest mainline fails in the same workflow
+
+## Inherent Records Automation (April 14, 2026)
+
+- User requested roadmap + changelog updates become inherent project behavior.
+- Implemented:
+  - new `CHANGELOG.md`
+  - new `Project Records Guard` workflow
+  - decision record: `docs/decisions/records-automation-policy.md`
+- Rule now enforced:
+  - major changes must update at least roadmap or changelog
+  - memory updates remain mandatory through Memory Guard
