@@ -1,0 +1,9 @@
+# Raw session copies (can be very large — Codex sessions are 50-500MB)
+# Keep metadata.json, summary.md, and raw-ref.txt — those are small and useful
+# Ignore actual raw copies:
+**/raw.jsonl
+**/raw-copy.jsonl
+**/raw/
+# Cowork screenshots (can be numerous)
+**/screenshot-*.jpg
+**/screenshots/

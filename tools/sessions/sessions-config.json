@@ -1,0 +1,155 @@
+{
+  "_comment": "Agent session source registry for the CloneWatch Sesiones Importantes subsystem.",
+  "schema_version": "1.0",
+  "last_updated": "2026-04-14",
+
+  "paths": {
+    "archive_summaries": "docs/sessions/archive",
+    "raw_archive": "../CloneWatch-sessions-raw",
+    "records": "docs/sessions/records",
+    "index": "docs/sessions/index.md"
+  },
+
+  "raw_archive_policy": "reference-only",
+  "_raw_archive_policy_note": "Options: 'copy' (copy raw files to raw_archive path), 'reference-only' (only store path reference, don't copy large files). Switch to 'copy' for sessions you want to preserve before 30-day Claude cleanup window.",
+
+  "agents": [
+    {
+      "id": "claude-code",
+      "display_name": "Claude Code",
+      "app": "Claude Desktop (Code mode)",
+      "vendor": "Anthropic",
+      "enabled": true,
+      "source_paths": [
+        "~/.claude/projects/"
+      ],
+      "source_path_note": "Each subdirectory is a project (/ replaced with -). Session files are {uuid}.jsonl inside each project dir.",
+      "session_glob": "~/.claude/projects/**/*.jsonl",
+      "format_id": "claude-code-jsonl-v1",
+      "importer_script": "importers/claude-code.sh",
+      "cleanup_days": 30,
+      "size_typical": "1-10MB",
+      "known_project_dirs": {
+        "-Users-Shared-Pruebas-CloneWatch--claude-worktrees-ecstatic-noether": "CloneWatch (worktree ecstatic-noether)"
+      }
+    },
+    {
+      "id": "codex",
+      "display_name": "ChatGPT Codex",
+      "app": "Codex Desktop / VS Code extension",
+      "vendor": "OpenAI",
+      "enabled": true,
+      "source_paths": [
+        "~/.codex/sessions/"
+      ],
+      "source_path_note": "Sessions stored under YYYY/MM/DD/rollout-{timestamp}-{uuid}.jsonl. Also has logs_2.sqlite and session_index.jsonl.",
+      "session_glob": "~/.codex/sessions/**/*.jsonl",
+      "format_id": "codex-jsonl-v1",
+      "importer_script": "importers/codex.sh",
+      "cleanup_days": null,
+      "size_typical": "50-500MB",
+      "extra_sources": [
+        "~/.codex/logs_2.sqlite",
+        "~/.codex/session_index.jsonl"
+      ]
+    },
+    {
+      "id": "claude-cowork",
+      "display_name": "Claude Cowork (Agent mode)",
+      "app": "Claude Desktop (Cowork/Agent mode)",
+      "vendor": "Anthropic",
+      "enabled": true,
+      "source_paths": [
+        "~/Library/Application Support/Claude/local-agent-mode-sessions/"
+      ],
+      "source_path_note": "Each session is a directory named with session ID. Contains audit.jsonl (full transcript + tool calls), screenshot-*.jpg, .claude.json.",
+      "session_glob": "~/Library/Application Support/Claude/local-agent-mode-sessions/*/audit.jsonl",
+      "format_id": "claude-cowork-jsonl-v1",
+      "importer_script": "importers/claude-cowork.sh",
+      "cleanup_days": null,
+      "size_typical": "varies; includes screenshots",
+      "security_note": "audit.jsonl has global read permissions per Pluto Security research. Contains full chain-of-thought."
+    },
+    {
+      "id": "claude-chat",
+      "display_name": "Claude Chat (Desktop / Web)",
+      "app": "Claude Desktop (Chat mode) or claude.ai web",
+      "vendor": "Anthropic",
+      "enabled": false,
+      "source_paths": [],
+      "source_path_note": "Cloud-only. No local session files. Export via Settings > Privacy > Export data. Produces a ZIP with JSON.",
+      "format_id": "claude-chat-export-v1",
+      "importer_script": "importers/claude-chat.sh",
+      "manual_export_steps": [
+        "1. Open Claude Desktop",
+        "2. Click avatar/initials (bottom left)",
+        "3. Settings > Privacy > Export data",
+        "4. Download ZIP within 24 hours",
+        "5. Extract and place in ~/Downloads/ or specified path",
+        "6. Run: tools/sessions/harvest-sessions.sh --agent claude-chat --input ~/Downloads/claude-export-YYYY-MM-DD.zip"
+      ],
+      "cleanup_days": null
+    },
+    {
+      "id": "cursor",
+      "display_name": "Cursor IDE",
+      "app": "Cursor",
+      "vendor": "Cursor / Anysphere",
+      "enabled": false,
+      "source_paths": [
+        "~/.cursor/"
+      ],
+      "source_path_note": "Format unknown — enable and investigate when Cursor sessions are added to project.",
+      "format_id": "cursor-unknown-v0",
+      "importer_script": "importers/cursor.sh",
+      "cleanup_days": null
+    },
+    {
+      "id": "gemini",
+      "display_name": "Google Gemini / Vertex AI",
+      "app": "Gemini API / CLI / aistudio.google.com",
+      "vendor": "Google",
+      "enabled": false,
+      "source_paths": [
+        "~/.gemini/"
+      ],
+      "source_path_note": "Format unknown — enable when Gemini sessions are added to project.",
+      "format_id": "gemini-unknown-v0",
+      "importer_script": "importers/gemini.sh",
+      "cleanup_days": null
+    }
+  ],
+
+  "format_registry": {
+    "claude-code-jsonl-v1": {
+      "description": "Claude Code JSONL session transcript",
+      "line_schema": {"type": "string", "operation": "string", "timestamp": "ISO8601", "sessionId": "uuid", "content": "string|object"},
+      "key_types": ["queue-operation", "assistant", "tool_result", "system"],
+      "message_field": "content",
+      "role_detection": "type field: 'queue-operation' with operation='enqueue' = user; 'assistant' = assistant",
+      "introduced": "2026-04-14",
+      "deprecated": null
+    },
+    "codex-jsonl-v1": {
+      "description": "Codex Desktop JSONL session transcript",
+      "line_schema": {"timestamp": "ISO8601", "type": "string", "payload": "object"},
+      "key_types": ["session_meta", "human_turn", "assistant_turn", "tool_call", "tool_result"],
+      "message_field": "payload",
+      "role_detection": "type field: 'human_turn'=user, 'assistant_turn'=assistant",
+      "introduced": "2026-04-14",
+      "deprecated": null
+    },
+    "claude-cowork-jsonl-v1": {
+      "description": "Claude Cowork (Agent mode) audit log",
+      "line_schema": {"timestamp": "ISO8601", "type": "string", "data": "object"},
+      "key_types": ["task_start", "tool_invocation", "tool_result", "model_output", "task_end"],
+      "introduced": "2026-04-14",
+      "deprecated": null
+    },
+    "claude-chat-export-v1": {
+      "description": "Claude.ai / Desktop chat export (ZIP > JSON)",
+      "introduced": "2026-04-14",
+      "deprecated": null
+    }
+  }
+}

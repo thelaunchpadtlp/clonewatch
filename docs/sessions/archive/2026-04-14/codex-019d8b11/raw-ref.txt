@@ -1,0 +1,5 @@
+/Users/piqui/.codex/sessions/2026/04/14/rollout-2026-04-14T02-17-48-019d8b11-6cb8-7290-b66a-9015d83bdd23.jsonl
+Size: 209M
+Lines: 6365
+Note: Codex sessions are typically 50-500MB. Raw file NOT copied.
+To copy: cp "/Users/piqui/.codex/sessions/2026/04/14/rollout-2026-04-14T02-17-48-019d8b11-6cb8-7290-b66a-9015d83bdd23.jsonl" /path/to/archive/

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "agent_id": "claude-code",
+  "agent_display_name": "Claude Code",
+  "format_id": "claude-code-jsonl-v1",
+  "session_id": "6e5936df-08ce-4e2a-8745-b235e0083df7",
+  "project_dir": "-Users-Shared-Pruebas-CloneWatch--claude-worktrees-ecstatic-noether",
+  "date": "2026-04-14",
+  "harvested_at": "2026-04-14T23:07:37Z",
+  "raw_path": "/Users/piqui/.claude/projects/-Users-Shared-Pruebas-CloneWatch--claude-worktrees-ecstatic-noether/6e5936df-08ce-4e2a-8745-b235e0083df7.jsonl",
+  "raw_size": "3.5M",
+  "raw_lines": 719,
+  "first_timestamp": "2026-04-14T17:37:48.751Z",
+  "last_timestamp": "2026-04-14T23:07:37.303Z",
+  "assistant_turns": 357,
+  "tool_calls": 248,
+  "summary_one_line": "Claude Code session — ¿Yo puedo crear un nuevo proyecto de coding e incluir esta sesión ahí? ¿Cóm",
+  "cleanup_risk": "HIGH — auto-deleted in 30 days from ~/.claude"
+}
