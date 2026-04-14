@@ -81,3 +81,24 @@ Before compacting context, append a dated summary of:
   - `clonewatch.md`
   - `docs/project-memory.md`
 - This converts project memory into an explicit governance mechanism and protects continuity for future sessions.
+
+## Actions Snapshot (April 14, 2026)
+
+- Latest tracked commit in focus: `f59a166`.
+- Current status at update time:
+  - `CI`: passed (green)
+  - `Memory Guard`: passed (green)
+  - `CodeQL`: running (yellow / in progress)
+- Operational reading rule:
+  - prioritize status of the latest commit on `main`
+  - ignore older failed runs unless the latest commit fails in the same workflow
+
+## GitHub Automation Baseline (active)
+
+- `CI`
+- `CodeQL`
+- `Docs History Validation`
+- `Dependabot`
+- `Memory Guard`
+
+These are considered the active baseline automations for the current phase.

@@ -212,3 +212,22 @@ Memory Guard promoted to central product governance (April 14, 2026)
   - fewer context-loss regressions
   - better handoff quality across sessions
   - clearer auditability of why design decisions changed over time
+
+Operational memory update (April 14, 2026 - Actions and GitHub automation status)
+
+- Current run focus is commit `f59a166` (`Institutionalize Memory Guard as core project feature`).
+- For that commit:
+  - `CI` is green (passed).
+  - `Memory Guard` is green (passed).
+  - `CodeQL` is still running (yellow / in progress at the time of this memory update).
+- Team rule confirmed: ignore old red runs from prior commits and unrelated Dependabot noise when validating the latest mainline health.
+- Branch protection status:
+  - ruleset for `main` was created in GitHub settings
+  - warning observed: in the current private-org plan, enforcement is limited unless upgraded
+  - mitigation adopted: keep ruleset as future-ready config and continue operational discipline with required green checks before merge decisions
+- GitHub automation baseline considered complete for this phase:
+  - `CI`
+  - `CodeQL`
+  - `Docs History Validation`
+  - `Dependabot`
+  - `Memory Guard`
