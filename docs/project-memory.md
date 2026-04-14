@@ -121,3 +121,21 @@ These are considered the active baseline automations for the current phase.
   - `README.md`
   - `CONTRIBUTING.md`
   - `docs/decisions/git-operations.md`
+
+## Actions Noise Reduction (April 14, 2026)
+
+- Dependabot cadence was reduced from weekly to monthly.
+- Open PR limit per ecosystem was reduced from 5 to 2.
+- Batch grouping was enabled for both:
+  - `github-actions`
+  - `swift`
+- Goal: reduce Actions queue noise and make failures easier to triage.
+
+## CodeQL Triage Adjustment (April 14, 2026)
+
+- CodeQL workflow was adjusted to skip runs when actor is `dependabot[bot]`.
+- CodeQL concurrency was added (`cancel-in-progress: true`) per ref to avoid stale overlapping runs.
+- Security posture kept:
+  - CodeQL still runs on `main` pushes
+  - CodeQL still runs on scheduled cadence
+- Operational goal: preserve meaningful security signal while removing low-value noise from automated dependency PR traffic.

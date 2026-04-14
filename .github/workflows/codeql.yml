@@ -13,6 +13,7 @@ on:
 jobs:
   analyze:
     name: Analyze
+    if: github.actor != 'dependabot[bot]'
     runs-on: macos-15
     permissions:
       actions: read
@@ -24,6 +25,9 @@ jobs:
       matrix:
         language:
           - swift
+    concurrency:
+      group: codeql-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout

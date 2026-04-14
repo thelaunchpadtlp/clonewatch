@@ -253,3 +253,28 @@ Operational memory update (April 14, 2026 - default auto-push workflow)
   - `README.md`
   - `CONTRIBUTING.md`
   - `docs/decisions/git-operations.md`
+
+Operational memory update (April 14, 2026 - Actions triage adjustment)
+
+- User requested repairs/actions based on noisy GitHub Actions dashboard.
+- Triage outcome:
+  - latest mainline runs are the priority signal
+  - old red runs and unrelated Dependabot failures should not block current development decisions
+- Concrete repo action applied:
+  - Dependabot reduced from weekly to monthly
+  - open PR cap lowered from 5 to 2 per ecosystem
+  - update grouping enabled for `github-actions` and `swift`
+- Intended effect:
+  - fewer concurrent automation runs
+  - clearer CI signal
+  - lower operational noise during active development
+
+Operational memory update (April 14, 2026 - CodeQL signal cleanup)
+
+- Based on Actions screenshots, repeated CodeQL failures were mostly linked to older runs and automated Dependabot PR activity.
+- Workflow adjustment applied:
+  - skip CodeQL job when actor is `dependabot[bot]`
+  - add per-ref concurrency with cancel-in-progress to avoid stale overlapping analyses
+- Security intent preserved:
+  - keep CodeQL on mainline and scheduled runs
+  - reduce noisy non-actionable failures in dashboard view
