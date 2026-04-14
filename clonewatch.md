@@ -176,3 +176,27 @@ This memory (`clonewatch.md`) summarises:
 - Outstanding issues and recommended enhancements.
 
 It is meant to be stored alongside the scripts and reports to provide historical context for future development and to address the user's concern about ChatGPT's limited context.
+
+Operational update (April 14, 2026) - GitHub, synchronization, and CI
+
+- Repository alignment: local `main` and `origin/main` were brought back into a healthy synchronized flow after push/pull confusion in GitHub Desktop.
+- Large PDF limitation handled: raw transcript PDFs are larger than GitHub's 100 MB per-file limit, so they are kept as local artifacts and referenced through:
+  - `docs/chat-history/raw-pdfs/README.local.md`
+  - `docs/chat-history/raw-pdfs.manifest.tsv`
+- Historical text still preserved in repo: extracted markdown files under `docs/chat-history/extracted/` and the canonical transcript remain tracked.
+- Automation baseline added for collaboration quality:
+  - CI workflow
+  - CodeQL workflow
+  - Docs-history validation workflow
+  - Dependabot configuration
+  - contribution and security policy files
+- Stability fixes applied:
+  - resolved accidental `README.md` merge-conflict markers
+  - updated docs-history workflow so CI does not fail when raw PDFs are intentionally local-only
+- Actions interpretation guidance for non-technical use:
+  - green check = passed
+  - yellow circle = queued or running
+  - red X = failed and needs intervention
+  - many Dependabot entries are expected background noise, not necessarily urgent blockers
+- Decision for project memory strategy:
+  - before context compaction, always write a short dated memory entry with what changed, what is pending, and what is safe to ignore

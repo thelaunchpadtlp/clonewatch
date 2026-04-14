@@ -47,3 +47,28 @@ Every important operation should leave behind enough evidence to answer:
 - what risks were known
 - what permissions were needed
 - whether the source can be archived or deleted safely
+
+## Operational Snapshot (April 14, 2026)
+
+- GitHub sync was repaired and the project is now operating from `main` with normal push/fetch behavior through GitHub Desktop.
+- Raw chat-history PDFs are intentionally local-only because they exceed GitHub's 100 MB limit per file.
+- The repo keeps durable references to those local PDFs through:
+  - `docs/chat-history/raw-pdfs/README.local.md`
+  - `docs/chat-history/raw-pdfs.manifest.tsv`
+- Reconstructed/extracted history remains versioned in git (`docs/chat-history/extracted/` and `docs/chat-history/canonical-transcript.md`).
+- CI hardening was completed:
+  - fixed `README.md` conflict markers
+  - made docs-history workflow resilient when raw PDFs are absent on CI runners
+- GitHub Actions status reading for operators:
+  - green = passed
+  - yellow = queued/running
+  - red = failed
+  - Dependabot runs are background maintenance and may appear noisy
+
+## Memory Discipline Rule
+
+Before compacting context, append a dated summary of:
+
+- what changed
+- what remains pending
+- what warnings/noise can be safely ignored
