@@ -4,6 +4,23 @@ All notable project changes are recorded here.
 
 ## 2026-04-14
 
+### Added (Claude Code session — wave 2: checkpoint automation)
+
+- `tools/collab/claude-checkpoint.sh` — automation trigger script for Claude; 6 trigger types
+  (SESSION_START, PLAN_APPROVED, TODO_DONE, FINDING, PROBLEM_DETECTED, SESSION_END)
+- `CLAUDE.md` Section 14 — Checkpoint Protocol: defines when Claude calls the script and what each trigger updates
+- `docs/temp/codex-personal/BRIEFING-FROM-CLAUDE-20260414.md` — full context handoff for Codex
+- `docs/collab/handoffs/20260414-201500-Claude.md` — session close handoff record
+
+### Changed (Claude Code session — wave 2)
+
+- `docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md` — corrected root cause from "minutes quota" to billing/payment failure
+- `docs/collab/current-state.md` — updated for session close state
+- `docs/sessions/records/claude-session-20260414-001.md` — finalized with wave 2 content
+- `clonewatch.md` — appended wave 2 operational memory update
+
+---
+
 ### Added (Claude Code session — externo analyst pass)
 
 - `CLAUDE.md` — root-level anchor for all Claude Code sessions (reads automatically)
@@ -60,8 +77,12 @@ All notable project changes are recorded here.
 - Collab schema expanded with `external_tasks` and `external_task_events` tables
 - README now includes beginner-friendly local app test instructions and explicit guidance for Claude/externos during an active writer session
 - project memory now records the session-pause handoff and the `.claude/` local-tool-state observation
+- `Docs History Validation` now always emits a required check on PRs to `main`, while still skipping expensive regeneration when docs-history inputs did not change
+- custom CodeQL workflow now uses `github/codeql-action@v4` and explicit `swift build` instead of `autobuild`
 
 ### Fixed
 
 - robust SQLite ledger import path for runtime/test stability
 - stale/interrupted-session handling process documented and operationalized with recovery checklist and lock lifecycle controls
+- CodeQL SARIF conflict caused by running custom CodeQL alongside GitHub default Code Scanning setup
+- hidden merge blocker where ruleset-required `Docs History Validation` was missing on unrelated PRs because the workflow was path-filtered

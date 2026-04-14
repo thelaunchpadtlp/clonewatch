@@ -2,21 +2,11 @@ name: Docs History Validation
 
 on:
   push:
-    paths:
-      - "Sources/CloneWatchDocsTool/**"
-      - "docs/chat-history/raw-pdfs/**"
-      - "docs/chat-history/extracted/**"
-      - "docs/chat-history/canonical-transcript.md"
-      - "docs/chat-history/reconstruction-notes.md"
-      - "Package.swift"
+    branches:
+      - main
   pull_request:
-    paths:
-      - "Sources/CloneWatchDocsTool/**"
-      - "docs/chat-history/raw-pdfs/**"
-      - "docs/chat-history/extracted/**"
-      - "docs/chat-history/canonical-transcript.md"
-      - "docs/chat-history/reconstruction-notes.md"
-      - "Package.swift"
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -27,8 +17,46 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect whether docs-history inputs changed
+        id: detect_changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZERO_SHA="0000000000000000000000000000000000000000"
+          EVENT_NAME="${{ github.event_name }}"
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            BASE_REF="${{ github.base_ref }}"
+            git fetch origin "$BASE_REF" --depth=1
+            RANGE="origin/$BASE_REF...HEAD"
+          else
+            BEFORE_SHA="${{ github.event.before }}"
+            if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "$ZERO_SHA" ]]; then
+              RANGE="$BEFORE_SHA...HEAD"
+            else
+              RANGE="HEAD~1...HEAD"
+            fi
+          fi
+
+          CHANGED_FILES="$(git diff --name-only "$RANGE" || true)"
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          NEEDS_VALIDATION="false"
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ "$file" =~ ^Sources/CloneWatchDocsTool/ ]] || [[ "$file" =~ ^docs/chat-history/raw-pdfs/ ]] || [[ "$file" =~ ^docs/chat-history/extracted/ ]] || [[ "$file" == "docs/chat-history/canonical-transcript.md" ]] || [[ "$file" == "docs/chat-history/reconstruction-notes.md" ]] || [[ "$file" == "Package.swift" ]]; then
+              NEEDS_VALIDATION="true"
+              break
+            fi
+          done <<< "$CHANGED_FILES"
+
+          echo "needs_validation=$NEEDS_VALIDATION" >> "$GITHUB_OUTPUT"
+
       - name: Detect bundled raw PDFs
         id: detect_pdfs
+        if: steps.detect_changes.outputs.needs_validation == 'true'
         run: |
           shopt -s nullglob
           files=(docs/chat-history/raw-pdfs/*.pdf)
@@ -39,11 +67,11 @@ jobs:
           fi
 
       - name: Rebuild extracted chat history
-        if: steps.detect_pdfs.outputs.has_pdfs == 'true'
+        if: steps.detect_changes.outputs.needs_validation == 'true' && steps.detect_pdfs.outputs.has_pdfs == 'true'
         run: swift run CloneWatchDocsTool
 
       - name: Ensure generated docs are committed
-        if: steps.detect_pdfs.outputs.has_pdfs == 'true'
+        if: steps.detect_changes.outputs.needs_validation == 'true' && steps.detect_pdfs.outputs.has_pdfs == 'true'
         run: |
           if ! git diff --quiet; then
             echo "Generated chat-history artifacts are out of date."
@@ -52,8 +80,14 @@ jobs:
             exit 1
           fi
 
+      - name: Explain skipped validation when docs-history inputs did not change
+        if: steps.detect_changes.outputs.needs_validation != 'true'
+        run: |
+          echo "No docs-history inputs changed in this ref."
+          echo "Reporting success so the required Docs History Validation check exists and stays mergeable."
+
       - name: Explain skipped validation when PDFs are local-only
-        if: steps.detect_pdfs.outputs.has_pdfs != 'true'
+        if: steps.detect_changes.outputs.needs_validation == 'true' && steps.detect_pdfs.outputs.has_pdfs != 'true'
         run: |
           echo "No raw PDFs were found in docs/chat-history/raw-pdfs on this runner."
           echo "Skipping regeneration check because raw PDFs are intentionally local-only and excluded from Git."

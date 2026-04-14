@@ -3,130 +3,153 @@
 - Date: 2026-04-14
 - From: Claude Code (session `6e5936df`)
 - Priority: HIGH (blocks all CI guards)
-- Status: PENDING
-- Depends on: USER ACTION (make repo public first)
+- Status: MOSTLY RESOLVED — Codex follow-up in progress
+- Depends on: Codex follow-up only
 
 ---
 
-## Objective
+## Root cause timeline (corrected and extended)
 
-GitHub Actions is failing on all workflows with `steps: []` (pre-step exit).
-Root cause: minutes quota exhausted for private repo on free GitHub plan.
-Fix: make the repo public → unlimited CI minutes.
+### Incident A — original repo-wide failure
+
+**Previous diagnosis was wrong.** The original task said the cause was
+"private repo minutes quota exhausted." That was incorrect.
+
+**Actual observed annotation (confirmed via `gh run view`):**
+
+```
+The job was not started because recent account payments have failed or
+your spending limit needs to be increased. Please check the 'Billing & plans'
+section in your settings.
+```
+
+This was a **billing/payment issue at the GitHub account level**, not a minutes quota.
+After the repository became public, normal workflow execution resumed.
+
+### Incident B — follow-up CodeQL / merge gating issue
+
+Once CI started running again, a second issue appeared:
+
+- CodeQL failed because **GitHub default Code Scanning setup** and the custom
+  `codeql.yml` workflow were both active.
+- PR #4 then became merge-blocked because the ruleset requires
+  `Docs History Validation`, but that workflow only ran when certain paths changed.
+
+### What has been done
+
+1. ✅ Repo is public, and Actions are executing normally again.
+2. ✅ GitHub default Code Scanning setup was disabled with:
+   `gh api -X PATCH repos/thelaunchpadtlp/clonewatch/code-scanning/default-setup -f state='not-configured'`
+3. ✅ CodeQL reran successfully on PR #4.
+4. ⏳ Remaining fix: make `Docs History Validation` always emit a required check on PRs to `main`.
+
+### What still needs to happen
 
 ---
 
-## Step 1 — USER action (cannot be done by Codex or Claude)
+## Step 1 — Codex: land the follow-up workflow fix on PR #4
 
-The user must manually do this in GitHub web:
-1. Go to `https://github.com/thelaunchpadtlp/clonewatch`
-2. Settings → General → scroll to Danger Zone → "Change repository visibility"
-3. Click "Make public"
-4. Type `thelaunchpadtlp/clonewatch` to confirm
-5. Tell Codex "repo is now public, run CI trigger"
+Update:
+- `.github/workflows/docs-history.yml` so PRs to `main` always emit `Docs History Validation`
+- `.github/workflows/codeql.yml` so custom CodeQL uses `@v4` and explicit `swift build`
+- `.gitignore` to ignore `.claude/`
+
+Then push the branch and let PR #4 rerun.
 
 ---
 
-## Step 2 — Codex: trigger CI after repo goes public
-
-After user confirms repo is public, run this from the repo root:
+## Step 2 — Codex: monitor PR #4 checks
 
 ```bash
-cd /Users/Shared/Pruebas/CloneWatch
+# List recent runs
+gh run list --repo thelaunchpadtlp/clonewatch --limit 10
 
-# Trigger CI with an empty commit
-git commit --allow-empty -m "ci: trigger CI verification after repo visibility change
+# Watch specific run
+gh run watch $(gh run list --repo thelaunchpadtlp/clonewatch --limit 1 --json databaseId --jq '.[0].databaseId')
 
-Why: GitHub Actions was failing pre-step due to exhausted private-repo minutes.
-Making repo public resolves the quota constraint.
-Validation: this commit triggers all workflows to verify they now run correctly.
-Collab trace: agent_app=ChatGPT-Codex
-Records updated: not required (operational trigger only)"
-
-git push origin main
+# View failures
+gh run view $(gh run list --repo thelaunchpadtlp/clonewatch --limit 1 --json databaseId --jq '.[0].databaseId') --log-failed
 ```
 
 ---
 
-## Step 3 — Codex: verify CI is now green
-
-```bash
-# Wait ~2 minutes then check
-gh run list --repo thelaunchpadtlp/clonewatch --limit 5
-
-# Check latest run in detail
-gh run view $(gh run list --repo thelaunchpadtlp/clonewatch --limit 1 --json databaseId --jq '.[0].databaseId') --log
-```
-
-Expected outcome: all workflows pass (CI, CodeQL, Memory Guard, Project Records Guard, Collab Guard).
-
----
-
-## Step 4 — Codex: update the incident record
+## Step 3 — Codex: if PR #4 is green, update incident record
 
 Edit `docs/github/actions-root-cause-incident.md`:
 - Change `Status: Open` → `Status: Resolved`
-- Add a "Resolution" section at the bottom:
+- Add a "Resolution" section:
 
 ```markdown
 ## Resolution
 
 Date resolved: 2026-04-14
-Action: Changed repository visibility from private to public.
-Root cause confirmed: GitHub Actions free-tier minutes exhaustion for private repos.
-Resolution author: [Codex or Claude]
+Action: Changed repository visibility to public; resolved GitHub billing issue.
+Root cause confirmed: GitHub account payment failure (NOT private repo minutes exhaustion
+as originally diagnosed). The billing error message from gh run view was:
+"The job was not started because recent account payments have failed or your spending
+limit needs to be increased."
+Resolution authors: User (billing fix) + ChatGPT-Codex (CI verification)
 ```
 
 ---
 
-## Step 5 — Codex: update external task to DONE
+## Step 4 — Codex: if PR #4 is green, merge PR
+
+```bash
+# Merge the PR (squash merge for clean history)
+gh pr merge 4 --squash --delete-branch
+```
+
+---
+
+## Step 5 — Codex: update external task and memory
 
 ```bash
 cd /Users/Shared/Pruebas/CloneWatch
+
+# Mark external task done
 tools/collab/external-update-task.sh \
   --task-id "EXT-ACTIONS-ROOTCAUSE-001" \
   --owner "The Launch Pad - TLP" \
   --agent-app "ChatGPT-Codex" \
-  --session-id "$(cat .clonewatch/agent-lock.json | python3 -c 'import json,sys; print(json.load(sys.stdin)[\"session_id\"])')" \
+  --session-id "<your-session-id>" \
   --status "DONE" \
-  --message "Resolved: repo made public, CI quota constraint removed. All workflows now pass."
+  --message "Resolved in two stages: repo visibility restored workflow execution; CodeQL default setup disabled; Docs History Validation now always reports required status on PRs."
 ```
 
----
-
-## Step 6 — Codex: update memory and push
-
-After CI is confirmed green, append to `clonewatch.md`:
+Append to `clonewatch.md`:
 
 ```
 Operational memory update (April 14, 2026 - GitHub Actions CI resolved)
 
-- GitHub Actions CI was failing with steps:[] on all workflows.
-- Root cause: private repo on free GitHub account had exhausted Actions minutes quota.
-- Solution: repository visibility changed from private to public.
-- All workflows now pass: CI, CodeQL, Memory Guard, Project Records Guard, Collab Guard.
+- GitHub Actions CI was failing on all workflows.
+- Root cause: GitHub account payment failure / spending limit issue (NOT minutes quota).
+- Original diagnosis (private repo minutes) was incorrect — corrected after inspecting
+  gh run view annotation which showed the actual billing error message.
+- Solution: User resolved billing, repo made public, CI verified via PR.
+- All five workflows now pass: CI, CodeQL, Memory Guard, Project Records Guard, Collab Guard.
 - Gate A exit criteria satisfied.
 ```
 
-And append to `docs/project-memory.md`:
+Append to `docs/project-memory.md`:
 
-```
+```markdown
 ## CI Blocker Resolved (April 14, 2026)
 
-- GitHub Actions restored after making repo public.
-- Root cause: free-tier minutes exhaustion (private repo quota).
+- GitHub Actions restored after fixing account billing and making repo public.
+- Root cause: GitHub account payment failure (original minutes-exhaustion diagnosis was wrong).
 - All five workflows now pass.
 - Gate A is now fully closed.
 ```
 
-Commit and push:
+Commit:
 ```bash
 git add docs/github/actions-root-cause-incident.md clonewatch.md docs/project-memory.md \
   docs/collab/external-outbox/ docs/collab/session-log.jsonl docs/collab/collab.sqlite
-git commit -m "fix(ci): resolve GitHub Actions pre-step failure by making repo public
+git commit -m "fix(ci): resolve GitHub Actions failure after billing fix and public repo
 
-Why: all workflows were failing with steps:[] due to private-repo minutes quota exhaustion.
-What: changed repo visibility to public, verified all five workflows pass.
+Why: all workflows were failing due to GitHub account payment issue (not minutes quota).
+What: billing resolved by user, repo made public, CI verified passing via PR.
 Validation: gh run list shows all workflows green.
 Collab trace: agent_app=ChatGPT-Codex
 Records updated: clonewatch.md, docs/project-memory.md, actions-root-cause-incident.md"
@@ -138,9 +161,10 @@ git push origin main
 
 ## Definition of done
 
-- [ ] Repo is public on GitHub
-- [ ] CI, CodeQL, Memory Guard, Project Records Guard, Collab Guard all pass
-- [ ] `docs/github/actions-root-cause-incident.md` marked Resolved
+- [x] GitHub billing/private-repo execution blocker mitigated
+- [ ] CI, CodeQL, Memory Guard, Project Records Guard, Docs History Validation all pass on PR
+- [ ] PR merged to main
+- [ ] `docs/github/actions-root-cause-incident.md` marked Resolved (with corrected root cause)
 - [ ] External task `EXT-ACTIONS-ROOTCAUSE-001` marked DONE
 - [ ] Memory updated (clonewatch.md + project-memory.md)
 - [ ] Changes pushed to origin/main

@@ -1,33 +1,35 @@
-# Incident: GitHub Actions Failing Before Job Steps
+# Incident: GitHub Actions Reliability and Merge-Gating Failures
 
 Date opened: 2026-04-14  
-Status: Open (infra/account-level blocker)
+Status: Mitigated and documented (follow-up hardening applied)
 
 ## Executive summary
 
-CloneWatch workflows on `main` are failing immediately across multiple workflows (`CI`, `CodeQL`, `Memory Guard`, `Project Records Guard`, `Collab Guard`).
+Two separate but related GitHub Actions problems were observed and are now documented together:
 
-Observed signature:
+1. **Repo-wide pre-step failures** on the private repository:
+   - jobs completed in seconds
+   - `steps` arrays were empty (`steps: []`)
+   - pattern affected macOS and Ubuntu workflows
+2. **Merge gating failure after CI recovery**:
+   - PR #4 checks were green for `CI`, `CodeQL`, `Memory Guard`, and `Collab Guard`
+   - merge was still blocked because branch rules required `Docs History Validation`
+   - that workflow was path-filtered and therefore did not run on unrelated PRs
 
-- run conclusion: `failure`
-- jobs complete in a few seconds
-- `steps` array is empty (`steps: []`)
-- pattern affects both macOS and Ubuntu workflows
+The first issue was infrastructure/account-level. The second issue was workflow/ruleset design.
 
-This strongly indicates a GitHub Actions infrastructure/account policy issue, not a project code issue.
+## Incident A — repo-wide pre-step failures
 
-## Evidence
-
-- latest failing runs (examples):
+- Representative failing runs:
   - `24412683095` (`CI`)
   - `24412683102` (`CodeQL`)
   - `24412683115` (`Memory Guard`)
   - `24412683120` (`Project Records Guard`)
-- job detail examples with empty steps:
+- Representative job detail examples with empty steps:
   - `build-and-test` job id `71312863856`
   - `enforce-memory-update` job id `71312863791`
 
-## What has already been done
+### What was done
 
 - local code validated:
   - `swift build` passed
@@ -38,27 +40,50 @@ This strongly indicates a GitHub Actions infrastructure/account policy issue, no
   - `tools/collab/diagnose-github-actions.sh`
   - `docs/github/actions-triage.md`
   - `docs/github/auth-access-policy.md`
+- repository visibility changed to public, which removed the private-repo billing gate
 
-## Most likely root-cause class
+### Root-cause conclusion
 
-One or more of:
+This first issue was consistent with GitHub account/repository execution gating rather than source-code failure. After the repository moved to public visibility, normal workflow execution resumed.
 
-1. account-level Actions quota/spending/minutes exhausted
-2. runner policy or entitlement restriction
-3. org/account security/policy gating workflow execution before runner steps
+## Incident B — CodeQL SARIF conflict and merge gating
 
-## Required owner-side checks (GitHub web)
+### Evidence
 
-1. billing/actions usage and spending limit
-2. runner availability policy for private repos
-3. repository/org Actions policy constraints
-4. auth mode that allows full diagnostics visibility from CLI/web
+- CodeQL failed on PR #4 with:
 
-## External solver tasking notes
+  `Code Scanning could not process the submitted SARIF file: CodeQL analyses from advanced configurations cannot be processed when the default setup is enabled`
+
+- Branch ruleset `Protect main` requires these checks:
+  - `CI`
+  - `CodeQL`
+  - `Docs History Validation`
+  - `Memory Guard`
+- PR #4 was still blocked even after its main PR checks were green because `Docs History Validation` never ran on unrelated changes.
+
+### What was done
+
+1. Confirmed GitHub default Code Scanning setup was still active.
+2. Disabled default setup via GitHub API so the repository's custom `codeql.yml` becomes the single source of truth.
+3. Re-ran CodeQL and observed a successful run on PR #4.
+4. Hardened the custom CodeQL workflow to:
+   - use `github/codeql-action@v4`
+   - run explicit `swift build` instead of relying on `autobuild`
+5. Updated `Docs History Validation` so it always reports a result on PRs to `main`, while still skipping expensive regeneration when docs-history inputs did not change.
+
+### Result
+
+- PR #4 is now expected to satisfy the required status-check model without hidden missing checks.
+- CodeQL configuration is no longer split between GitHub default setup and custom workflow logic.
+
+## External solver notes
 
 If an external tool/agent investigates this incident, it must:
 
 1. read this file first
 2. append findings to `docs/collab/external-outbox/`
 3. include reproducible evidence (screenshots/URLs/error text)
-4. avoid changing project code until infra blocker is cleared
+4. distinguish clearly between:
+   - account/platform failures
+   - workflow design failures
+   - branch-ruleset merge failures

@@ -605,3 +605,43 @@ Operational memory update (April 14, 2026 - session pause handoff for Claude ins
   - TASK-CLAUDE-002: Update CI guards to exclude docs/temp/ and docs/sessions/
   - TASK-CLAUDE-003: Add markdown headers to clonewatch.md body
 - GitHub Actions still failing (steps:[]) — requires user to make repo public.
+
+### Operational memory update: Claude wave 2 — checkpoint automation and CI root cause correction (Apr 14, 2026)
+
+- Wave 2 of Claude's first session added a checkpoint automation system.
+- New script: `tools/collab/claude-checkpoint.sh` with 6 trigger types:
+  SESSION_START, PLAN_APPROVED, TODO_DONE, FINDING, PROBLEM_DETECTED, SESSION_END.
+  Each trigger prints the mandatory update checklist and creates stubs in docs/temp/claude-personal/.
+- CLAUDE.md updated with Section 14 (Checkpoint Protocol) — documents all triggers and obligations.
+- CI root cause corrected: original diagnosis was "private repo minutes quota exhausted."
+  Actual cause (confirmed via gh run view): GitHub account billing/payment failure.
+  Making repo public helps (free minutes for public repos) but billing must also be cleared.
+- Repo is now PUBLIC as of 2026-04-14. GitHub Actions is now running (billing may still need fix).
+- Main branch has "Protect main" ruleset: 4 required CI checks before merge (CI, CodeQL,
+  Docs History Validation, Memory Guard). Direct push to main blocked — use PRs.
+- Codex briefing written: docs/temp/codex-personal/BRIEFING-FROM-CLAUDE-20260414.md.
+- Session close handoff: docs/collab/handoffs/20260414-201500-Claude.md.
+- Claude pausing for Mac app update. Workspace free. Codex can proceed.
+
+### Operational memory update: GitHub Actions follow-up after Claude PR review (Apr 14, 2026)
+
+- Codex verified PR #4 from Claude and confirmed the core PR checks are green:
+  - CI
+  - CodeQL
+  - Memory Guard
+  - Project Records Guard
+  - Collab Guard
+- A second merge blocker was discovered:
+  - ruleset `Protect main` requires `Docs History Validation`
+  - that workflow was path-filtered and therefore did not emit a check on unrelated PRs
+  - result: PR looked green but GitHub still blocked merge because a required check was missing
+- CodeQL root cause was also refined:
+  - GitHub default Code Scanning setup and the custom `codeql.yml` workflow were both active
+  - this produced SARIF processing failure on PR #4
+  - Codex disabled default setup and confirmed successful rerun
+- Follow-up hardening chosen:
+  - make `Docs History Validation` always emit a result on PRs to `main`
+  - upgrade custom CodeQL workflow to `github/codeql-action@v4`
+  - replace CodeQL autobuild with explicit `swift build`
+  - keep `.claude/` local-only by adding it to `.gitignore`
+- This incident and the attempted solutions must remain visible in-project so externos can propose even better or more permanent fixes.
