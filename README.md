@@ -69,6 +69,7 @@ This repo now includes baseline GitHub automation:
 - `Docs History Validation`: reruns the chat-history extraction pipeline and fails if generated files were not committed
 - `CodeQL`: scans the Swift codebase for security issues
 - `Dependabot`: proposes updates for GitHub Actions and Swift dependencies
+- `Memory Guard`: if architecture/runtime/automation files change, memory files must also be updated in the same PR/commit (`clonewatch.md` or `docs/project-memory.md`)
 
 These automations are healthy because they protect quality and security without making uncontrolled changes to your code.
 

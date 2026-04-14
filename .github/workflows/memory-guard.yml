@@ -1,0 +1,80 @@
+name: Memory Guard
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  enforce-memory-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require memory update for major changes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZERO_SHA="0000000000000000000000000000000000000000"
+          EVENT_NAME="${{ github.event_name }}"
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            BASE_REF="${{ github.base_ref }}"
+            git fetch origin "$BASE_REF" --depth=1
+            RANGE="origin/$BASE_REF...HEAD"
+          else
+            BEFORE_SHA="${{ github.event.before }}"
+            if [[ -n "${BEFORE_SHA:-}" && "$BEFORE_SHA" != "$ZERO_SHA" ]]; then
+              RANGE="$BEFORE_SHA...HEAD"
+            else
+              RANGE="HEAD~1...HEAD"
+            fi
+          fi
+
+          CHANGED_FILES="$(git diff --name-only "$RANGE" || true)"
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if [[ -z "${CHANGED_FILES// }" ]]; then
+            echo "No changes detected in range. Skipping Memory Guard."
+            exit 0
+          fi
+
+          NEEDS_MEMORY="false"
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" == "README.md" ]] || [[ "$file" == "docs/architecture.md" ]] || [[ "$file" =~ ^\.github/workflows/ ]]; then
+              NEEDS_MEMORY="true"
+              break
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [[ "$NEEDS_MEMORY" != "true" ]]; then
+            echo "No architecture/runtime/automation changes detected. Memory update not required."
+            exit 0
+          fi
+
+          MEMORY_TOUCHED="false"
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ "$file" == "clonewatch.md" ]] || [[ "$file" == "docs/project-memory.md" ]]; then
+              MEMORY_TOUCHED="true"
+              break
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [[ "$MEMORY_TOUCHED" == "true" ]]; then
+            echo "Memory files were updated. Memory Guard passed."
+            exit 0
+          fi
+
+          echo "Memory Guard failed."
+          echo "You changed architecture/runtime/automation files, but did not update project memory."
+          echo "Please update at least one of:"
+          echo "- clonewatch.md"
+          echo "- docs/project-memory.md"
+          exit 1

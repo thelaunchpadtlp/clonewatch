@@ -72,3 +72,12 @@ Before compacting context, append a dated summary of:
 - what changed
 - what remains pending
 - what warnings/noise can be safely ignored
+
+## Memory Guard Institutionalized (April 14, 2026)
+
+- Memory update before context compaction is now a core project feature, not just a chat habit.
+- A new GitHub Actions workflow (`Memory Guard`) now enforces this rule at repository level.
+- Guard rule: if architecture/runtime/automation files change, at least one memory file must be updated in the same change set:
+  - `clonewatch.md`
+  - `docs/project-memory.md`
+- This converts project memory into an explicit governance mechanism and protects continuity for future sessions.

@@ -19,6 +19,8 @@ The app is split conceptually into these layers:
 - `Permission coordinator`: decides what the app can ask for directly and what must be guided manually.
 - `Privileged helper`:
   Future component for mount/unmount, delete volume, repartition, and other administrator-only operations.
+- `Memory Guard`:
+  Project-level governance feature that requires project memory updates whenever architecture/runtime/automation behavior changes.
 
 The GUI itself should not run as root. Instead:
 
@@ -66,3 +68,13 @@ Destructive actions such as deleting a cloned volume, resizing containers, or re
 - explicit confirmation boundaries
 - durable audit logging
 - a rollback-aware plan where possible
+
+## Memory-As-A-Feature (Governance)
+
+CloneWatch treats memory as part of the product, not just documentation.
+
+- `clonewatch.md` keeps long-form historical continuity.
+- `docs/project-memory.md` keeps a concise operational snapshot.
+- GitHub `Memory Guard` workflow enforces memory updates when major behavior changes are committed.
+
+This reduces context loss and keeps future sessions aligned with prior decisions.

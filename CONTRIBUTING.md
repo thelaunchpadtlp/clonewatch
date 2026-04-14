@@ -34,3 +34,4 @@ swift run CloneWatchDocsTool
 - Keep macOS permission realities documented
 - Treat iCloud and File Provider paths as special cases
 - Update docs when architecture or behavior changes
+- If you change architecture/runtime/automation behavior, update memory in the same PR (`clonewatch.md` or `docs/project-memory.md`)

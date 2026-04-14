@@ -200,3 +200,15 @@ Operational update (April 14, 2026) - GitHub, synchronization, and CI
   - many Dependabot entries are expected background noise, not necessarily urgent blockers
 - Decision for project memory strategy:
   - before context compaction, always write a short dated memory entry with what changed, what is pending, and what is safe to ignore
+
+Memory Guard promoted to central product governance (April 14, 2026)
+
+- The team decision is to treat memory continuity as a first-class feature of CloneWatch, not merely an assistant reminder.
+- Repository-level enforcement was added via GitHub Actions workflow `Memory Guard`.
+- Enforcement rule:
+  - when architecture/runtime/automation surfaces are changed, memory must be updated in the same commit/PR
+  - accepted memory targets are `clonewatch.md` and `docs/project-memory.md`
+- Practical outcome:
+  - fewer context-loss regressions
+  - better handoff quality across sessions
+  - clearer auditability of why design decisions changed over time
