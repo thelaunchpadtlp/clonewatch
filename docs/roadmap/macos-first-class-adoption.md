@@ -45,6 +45,8 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
 
 - [x] CI + CodeQL + docs validation + memory guardrails
 - [x] Policy-driven memory governance
+- [x] Multi-agent CollabOps baseline (single-writer lock + session log + handoff protocol)
+- [x] `Collab Guard` workflow for critical-change traceability
 - [ ] macOS signing/notarization pipeline scaffolding
 - [ ] Hardened runtime validation in CI
 
@@ -81,6 +83,7 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
   - deeper Finder integrations
   - plugin model evaluation
 - [ ] Universal links / URL schemes for external orchestration
+- [ ] Advanced multi-agent orchestration dashboard (cross-tool visibility and metrics)
 
 ## Explicit deprioritization for current product stage
 

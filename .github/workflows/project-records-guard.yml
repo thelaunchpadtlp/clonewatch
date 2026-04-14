@@ -48,7 +48,7 @@ jobs:
           NEEDS_RECORD_UPDATE="false"
           while IFS= read -r file; do
             [[ -z "$file" ]] && continue
-            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" =~ ^\.github/workflows/ ]] || [[ "$file" == "docs/architecture.md" ]]; then
+            if [[ "$file" =~ ^Sources/ ]] || [[ "$file" == "Package.swift" ]] || [[ "$file" =~ ^\.github/workflows/ ]] || [[ "$file" == "docs/architecture.md" ]] || [[ "$file" =~ ^tools/collab/ ]] || [[ "$file" =~ ^docs/schemas/ ]] || [[ "$file" =~ ^docs/collab/ ]]; then
               NEEDS_RECORD_UPDATE="true"
               break
             fi

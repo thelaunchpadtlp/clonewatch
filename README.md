@@ -13,6 +13,8 @@ CloneWatch is a macOS-first cloning, verification, and storage-migration project
 
 - `docs/roadmap/macos-first-class-adoption.md`: prioritized adoption map (Now / Next / Later / Pending integral)
 - `docs/decisions/macos-prioritization-framework.md`: decision rule for high-impact feature intake
+- `docs/collab/protocol.md`: multi-agent operating protocol with Single Writer as default
+- `docs/collab/agent-capability-matrix.md`: practical role/risk matrix for external agentic apps
 - `CHANGELOG.md`: detailed change history
 
 ## Current architecture
@@ -78,6 +80,7 @@ This repo now includes baseline GitHub automation:
 - `Dependabot`: proposes batched monthly updates for GitHub Actions and Swift dependencies (limited concurrent PRs to reduce noise)
 - `Memory Guard`: if architecture/runtime/automation files change, memory files must also be updated in the same PR/commit (`clonewatch.md` or `docs/project-memory.md`)
 - `Project Records Guard`: major changes must update roadmap and/or changelog (`docs/roadmap/macos-first-class-adoption.md` or `CHANGELOG.md`)
+- `Collab Guard`: critical changes must include session-trace evidence (`docs/collab/session-log.jsonl` and/or `docs/collab/handoffs/*`)
 
 These automations are healthy because they protect quality and security without making uncontrolled changes to your code.
 
@@ -102,3 +105,30 @@ Default execution policy (from now on):
 - After implementing agreed changes and running relevant checks, Codex will push to `origin/main` automatically unless the user explicitly says not to push.
 - If a push involves non-obvious risk (for example destructive behavior, major refactors, or unresolved failures), Codex should pause and request confirmation before pushing.
 - When a plan is approved, memory update is mandatory as the first implementation step (`clonewatch.md` + `docs/project-memory.md`).
+
+## Single Writer (for dummies, step by step)
+
+Single Writer means only one active tool/agent edits the repo at a time.
+
+Why this helps:
+
+- avoids overwrite conflicts
+- keeps history understandable
+- makes handoff between apps reliable
+
+Minimal command flow:
+
+```bash
+tools/collab/begin-session.sh --owner "Your Name" --agent-app "ChatGPT Desktop" --session-id "session-001"
+swift build
+swift test
+tools/collab/record-step.sh --owner "Your Name" --agent-app "ChatGPT Desktop" --session-id "session-001" --event "VALIDATE" --message "Build and tests passed."
+tools/collab/handoff.sh --owner "Your Name" --agent-app "ChatGPT Desktop" --session-id "session-001" --summary "Implemented scoped changes and validated."
+tools/collab/release-lock.sh --owner "Your Name" --agent-app "ChatGPT Desktop" --session-id "session-001"
+```
+
+If the session was interrupted, use:
+
+```bash
+tools/collab/recover-interrupted-session.sh --owner "Your Name" --agent-app "ChatGPT Desktop" --session-id "session-002"
+```

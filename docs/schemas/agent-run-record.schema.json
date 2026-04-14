@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clonewatch.local/schemas/agent-run-record.schema.json",
+  "title": "AgentRunRecord",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "owner",
+    "agent_app",
+    "session_id",
+    "event",
+    "status",
+    "message"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_app": {
+      "type": "string",
+      "minLength": 1
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ok", "warn", "error"]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "details": {
+      "type": ["object", "null"]
+    }
+  },
+  "additionalProperties": false
+}

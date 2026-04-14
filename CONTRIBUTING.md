@@ -39,3 +39,24 @@ swift run CloneWatchDocsTool
 - Default assistant workflow in this workspace: implement -> validate -> update memory -> commit -> `push origin` automatically (unless user says otherwise)
 - If a plan was explicitly approved by the user, perform memory update first before implementation changes
 - For major changes, update strategy/delivery records too (`CHANGELOG.md` and/or `docs/roadmap/macos-first-class-adoption.md`)
+
+## Multi-agent coordination (mandatory)
+
+Default mode is `single-writer`.
+
+Required flow:
+
+1. `tools/collab/begin-session.sh`
+2. do work
+3. run validation checks
+4. `tools/collab/record-step.sh` for key milestones
+5. `tools/collab/handoff.sh` before finishing
+6. `tools/collab/release-lock.sh`
+
+If a session is interrupted (usage limit, crash, disconnect), run:
+
+```bash
+tools/collab/recover-interrupted-session.sh --owner "<name>" --agent-app "<app>" --session-id "<new-session-id>"
+```
+
+Do not bypass lock ownership without explicit recovery trace.

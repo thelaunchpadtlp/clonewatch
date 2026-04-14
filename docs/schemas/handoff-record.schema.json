@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clonewatch.local/schemas/handoff-record.schema.json",
+  "title": "HandoffRecord",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "owner",
+    "agent_app",
+    "session_id",
+    "mode",
+    "base_commit",
+    "end_commit",
+    "handoff_path",
+    "summary"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "owner": { "type": "string", "minLength": 1 },
+    "agent_app": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "mode": {
+      "type": "string",
+      "enum": ["single-writer", "direct-main", "parallel-branches"]
+    },
+    "base_commit": { "type": "string", "minLength": 7 },
+    "end_commit": { "type": "string", "minLength": 7 },
+    "handoff_path": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 1 },
+    "pending": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

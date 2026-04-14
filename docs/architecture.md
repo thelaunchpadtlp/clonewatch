@@ -16,6 +16,7 @@ The app is split conceptually into these layers:
 
 - `SwiftUI app`: guides the user, explains risk, and renders evidence.
 - `Core engines`: preflight, inventory, copy, verification, ledger, transcript reconstruction.
+- `CollabOps layer`: lock-based single-writer coordination, session trace logs, structured handoffs, and recovery workflow for interrupted sessions.
 - `Permission coordinator`: decides what the app can ask for directly and what must be guided manually.
 - `Privileged helper`:
   Future component for mount/unmount, delete volume, repartition, and other administrator-only operations.
@@ -76,5 +77,20 @@ CloneWatch treats memory as part of the product, not just documentation.
 - `clonewatch.md` keeps long-form historical continuity.
 - `docs/project-memory.md` keeps a concise operational snapshot.
 - GitHub `Memory Guard` workflow enforces memory updates when major behavior changes are committed.
+- GitHub `Project Records Guard` enforces roadmap/changelog updates for major changes.
+- GitHub `Collab Guard` enforces session trace evidence for critical changes.
 
 This reduces context loss and keeps future sessions aligned with prior decisions.
+
+## Multi-agent operating model
+
+- default mode: `single-writer`
+- controlled alternatives:
+  - `direct-main` with strict gates
+  - `parallel-branches` for broader risk
+
+The lock record is `.clonewatch/agent-lock.json` and session evidence is stored in:
+
+- `docs/collab/session-log.jsonl`
+- `docs/collab/handoffs/*`
+- `docs/collab/collab.sqlite`

@@ -12,6 +12,11 @@ All notable project changes are recorded here.
 - session traceability policy and registry
 - run progress architecture (phase model + serializable snapshots)
 - run progress export artifact (`run-progress.json`)
+- CollabOps protocol and governance docs for multi-agent coordination
+- JSON schemas for `agent-run-record`, `handoff-record`, and `lock-record`
+- single-writer operational scripts (`begin-session`, `claim-lock`, `record-step`, `handoff`, `release-lock`, `recover-interrupted-session`, `self-test`, `update-sqlite`)
+- `Collab Guard` GitHub Actions workflow
+- Actions triage guide (`docs/github/actions-triage.md`)
 
 ### Changed
 
@@ -21,8 +26,10 @@ All notable project changes are recorded here.
 - Run UI now shows timeline/progress narrative and accessibility-focused status cues
 - Dependabot cadence/limits tuned to reduce CI noise
 - CodeQL and Memory Guard bot-noise handling refined
+- Memory and project-record guards now include CollabOps-sensitive paths (`tools/collab`, `docs/collab`, `docs/schemas`)
+- CI now uses bot-noise filter and per-ref concurrency for cleaner signal
 
 ### Fixed
 
 - robust SQLite ledger import path for runtime/test stability
-
+- stale/interrupted-session handling process documented and operationalized with recovery checklist and lock lifecycle controls

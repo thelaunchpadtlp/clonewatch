@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clonewatch.local/schemas/lock-record.schema.json",
+  "title": "LockRecord",
+  "type": "object",
+  "required": [
+    "owner",
+    "agent_app",
+    "session_id",
+    "started_at",
+    "lease_expires_at",
+    "base_commit",
+    "mode"
+  ],
+  "properties": {
+    "owner": { "type": "string", "minLength": 1 },
+    "agent_app": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "lease_expires_at": { "type": "string", "format": "date-time" },
+    "lease_expires_at_epoch": { "type": "integer", "minimum": 0 },
+    "base_commit": { "type": "string", "minLength": 7 },
+    "mode": {
+      "type": "string",
+      "enum": ["single-writer", "direct-main", "parallel-branches"]
+    },
+    "repo": { "type": "string" }
+  },
+  "additionalProperties": false
+}
