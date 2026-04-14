@@ -645,3 +645,27 @@ Operational memory update (April 14, 2026 - session pause handoff for Claude ins
   - replace CodeQL autobuild with explicit `swift build`
   - keep `.claude/` local-only by adding it to `.gitignore`
 - This incident and the attempted solutions must remain visible in-project so externos can propose even better or more permanent fixes.
+
+### Operational memory update: GitHub ruleset mismatch fully isolated and corrected (Apr 14, 2026)
+
+- Codex continued the merge investigation after all visible PR checks were green.
+- Exact final root cause:
+  - ruleset `Protect main` required friendly workflow-style labels:
+    - `CI`
+    - `CodeQL`
+    - `Docs History Validation`
+    - `Memory Guard`
+  - GitHub was actually evaluating emitted check names:
+    - `build-and-test`
+    - `CodeQL`
+    - `validate-doc-history`
+    - `enforce-memory-update`
+- Consequence:
+  - GitHub kept reporting that only 3 of 4 required checks were expected
+  - PR #4 remained blocked even though it looked green
+- Final corrective action:
+  - update the ruleset so required contexts exactly match the emitted checks
+  - then merge PR #4 successfully into `main`
+- This is an important architectural lesson for the project:
+  - branch/ruleset policy must be aligned to concrete emitted checks, not only to workflow display names
+  - serious operational problems like this must stay documented for externos and future maintainers

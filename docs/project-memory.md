@@ -402,3 +402,28 @@ These are considered the active baseline automations for the current phase.
 - Operational lesson:
   - a repository can appear "green enough" to humans while still being unmergeable due to ruleset/check mismatches
   - this class of problem must be documented in-project for externos and future agents
+
+## GitHub Actions Recovery Closure (April 14, 2026)
+
+- Codex continued the investigation until the exact merge blocker was isolated.
+- Final discovery:
+  - the `Protect main` ruleset required workflow-style names:
+    - `CI`
+    - `CodeQL`
+    - `Docs History Validation`
+    - `Memory Guard`
+  - but GitHub was actually evaluating the emitted checks:
+    - `build-and-test`
+    - `CodeQL`
+    - `validate-doc-history`
+    - `enforce-memory-update`
+- Result:
+  - GitHub reported that only 3 of 4 required checks were expected
+  - PR #4 stayed blocked even though the visible checks looked green
+- Final fix:
+  - update the ruleset contexts to the actual emitted check names
+  - keep the workflow hardening already applied (`Docs History Validation` always emits a result; custom CodeQL remains the only CodeQL source)
+- Outcome:
+  - PR #4 merged successfully into `main`
+  - the CI incident is now considered resolved
+  - the incident stays documented so externos can still suggest stronger or more elegant future hardening

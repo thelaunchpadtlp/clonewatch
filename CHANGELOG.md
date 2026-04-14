@@ -86,3 +86,4 @@ All notable project changes are recorded here.
 - stale/interrupted-session handling process documented and operationalized with recovery checklist and lock lifecycle controls
 - CodeQL SARIF conflict caused by running custom CodeQL alongside GitHub default Code Scanning setup
 - hidden merge blocker where ruleset-required `Docs History Validation` was missing on unrelated PRs because the workflow was path-filtered
+- final merge blocker caused by ruleset contexts (`CI`, `Docs History Validation`, `Memory Guard`) not matching the actual emitted check names (`build-and-test`, `validate-doc-history`, `enforce-memory-update`)
