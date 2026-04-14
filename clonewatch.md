@@ -285,7 +285,7 @@ Memory Guard promoted to central product governance (April 14, 2026)
   - better handoff quality across sessions
   - clearer auditability of why design decisions changed over time
 
-Operational memory update (April 14, 2026 - Actions and GitHub automation status)
+### Operational memory update: April 14, 2026 - Actions and GitHub automation status
 
 - Current run focus is commit `f59a166` (`Institutionalize Memory Guard as core project feature`).
 - For that commit:
@@ -304,7 +304,7 @@ Operational memory update (April 14, 2026 - Actions and GitHub automation status
   - `Dependabot`
   - `Memory Guard`
 
-Operational memory update (April 14, 2026 - SSH push capability enabled)
+### Operational memory update: April 14, 2026 - SSH push capability enabled
 
 - User completed GitHub SSH key registration for this machine.
 - Repository remote was switched from HTTPS to SSH:
@@ -314,7 +314,7 @@ Operational memory update (April 14, 2026 - SSH push capability enabled)
   - Codex can now perform `push origin` directly from terminal in this workspace when requested or when needed to complete agreed flows.
   - pushes remain subject to normal safety discipline (clear commit scope, readable commit messages, and memory updates when required).
 
-Operational memory update (April 14, 2026 - default auto-push workflow)
+### Operational memory update: April 14, 2026 - default auto-push workflow
 
 - User requested that push behavior become default and explicit in project policy.
 - Policy adopted:
@@ -326,7 +326,7 @@ Operational memory update (April 14, 2026 - default auto-push workflow)
   - `CONTRIBUTING.md`
   - `docs/decisions/git-operations.md`
 
-Operational memory update (April 14, 2026 - Actions triage adjustment)
+### Operational memory update: April 14, 2026 - Actions triage adjustment
 
 - User requested repairs/actions based on noisy GitHub Actions dashboard.
 - Triage outcome:
@@ -341,7 +341,7 @@ Operational memory update (April 14, 2026 - Actions triage adjustment)
   - clearer CI signal
   - lower operational noise during active development
 
-Operational memory update (April 14, 2026 - CodeQL signal cleanup)
+### Operational memory update: April 14, 2026 - CodeQL signal cleanup
 
 - Based on Actions screenshots, repeated CodeQL failures were mostly linked to older runs and automated Dependabot PR activity.
 - Workflow adjustment applied:
@@ -351,7 +351,7 @@ Operational memory update (April 14, 2026 - CodeQL signal cleanup)
   - keep CodeQL on mainline and scheduled runs
   - reduce noisy non-actionable failures in dashboard view
 
-Operational memory update (April 14, 2026 - integrated 1-3 implementation pass)
+### Operational memory update: April 14, 2026 - integrated 1-3 implementation pass
 
 - Efficiency-focused implementation pass completed across copy + verification + runtime flow.
 - CopyEngine upgrade:
@@ -369,7 +369,7 @@ Operational memory update (April 14, 2026 - integrated 1-3 implementation pass)
   - new tests added for dry-run parsing, incremental argument building, and verification-mode behavior
   - test suite passed after changes
 
-Operational memory update (April 14, 2026 - plan-approval memory first)
+### Operational memory update: April 14, 2026 - plan-approval memory first
 
 - User requested memory updates to happen automatically every time a plan is approved.
 - Project decision accepted and institutionalized:
@@ -381,7 +381,7 @@ Operational memory update (April 14, 2026 - plan-approval memory first)
   - `Memory Guard` expanded to include `docs/decisions/**` and `docs/plans/**` as memory-sensitive paths
   - `Memory Guard` now ignores Dependabot actor noise to keep signal focused on human changes
 
-Operational memory update (April 14, 2026 - session metadata traceability)
+### Operational memory update: April 14, 2026 - session metadata traceability
 
 - User proposed storing session id, deeplink, and working directory inside project records.
 - Decision adopted with constraints:
@@ -392,7 +392,7 @@ Operational memory update (April 14, 2026 - session metadata traceability)
   - `docs/decisions/session-traceability-policy.md`
   - `docs/decisions/session-registry.md` with the provided session reference
 
-Operational memory update (April 14, 2026 - pre-execution checkpoint)
+### Operational memory update: April 14, 2026 - pre-execution checkpoint
 
 - User requested an efficient corrective pass with memory update before and after execution.
 - Immediate technical blocker identified:
@@ -402,7 +402,7 @@ Operational memory update (April 14, 2026 - pre-execution checkpoint)
   - finish progress-flow integration already in-flight
   - run full tests, then update post-execution memory and push to GitHub
 
-Operational memory update (April 14, 2026 - post-execution completion)
+### Operational memory update: April 14, 2026 - post-execution completion
 
 - Execution goals were completed in one efficient pass:
   - robust fix for failing SQLite ledger test path
@@ -416,7 +416,7 @@ Operational memory update (April 14, 2026 - post-execution completion)
   - memory updated before execution and after execution
   - pending changes are ready for commit/push
 
-Operational memory update (April 14, 2026 - macOS ambition capture and integral pending)
+### Operational memory update: April 14, 2026 - macOS ambition capture and integral pending
 
 - User requested ambitious incorporation of broad macOS design/architecture/accessibility guidance.
 - Project response chosen:
@@ -430,7 +430,7 @@ Operational memory update (April 14, 2026 - macOS ambition capture and integral 
   - prioritize latest mainline CI signal for debugging
   - prevent older/bot run noise from derailing active delivery
 
-Operational memory update (April 14, 2026 - roadmap/changelog as inherent automation)
+### Operational memory update: April 14, 2026 - roadmap/changelog as inherent automation
 
 - User requested that roadmap updates and changelog updates become default project behavior.
 - Implemented as project-level governance and automation:
@@ -441,7 +441,7 @@ Operational memory update (April 14, 2026 - roadmap/changelog as inherent automa
   - when major changes happen, strategy and change records are updated by default
   - if not updated, CI guard fails
 
-Operational memory update (April 14, 2026 - pre-implementation checkpoint for multi-agent CollabOps)
+### Operational memory update: April 14, 2026 - pre-implementation checkpoint for multi-agent CollabOps
 
 - User approved a frugal but deep implementation to make CloneWatch safely operable by multiple agentic apps over time (one active writer at a time by default).
 - Execution was intentionally split into three compact bands:
@@ -452,7 +452,7 @@ Operational memory update (April 14, 2026 - pre-implementation checkpoint for mu
   - memory updated before mutating implementation work
   - objective is to finish with post-execution memory, changelog, roadmap, and push synchronized
 
-Operational memory update (April 14, 2026 - post-implementation CollabOps + GitHub hardening)
+### Operational memory update: April 14, 2026 - post-implementation CollabOps + GitHub hardening
 
 - Implemented a full frugal/robust `CollabOps` baseline for multi-agent continuity:
   - protocol with `Single Writer` default
@@ -472,7 +472,7 @@ Operational memory update (April 14, 2026 - post-implementation CollabOps + GitH
   - SQLite evidence tables populated
   - full Swift build/test passed
 
-Operational memory update (April 14, 2026 - pre-execution checkpoint for GitHub zero-surprises + external delegation)
+### Operational memory update: April 14, 2026 - pre-execution checkpoint for GitHub zero-surprises + external delegation
 
 - User approved immediate execution of an ultra-efficient plan with five fronts:
   - GitHub zero-surprises operational closure
@@ -490,7 +490,7 @@ Operational memory update (April 14, 2026 - pre-execution checkpoint for GitHub 
   - add reproducible GitHub diagnostics workflow/runbook for root-cause triage
   - update memory/roadmap/changelog/docs before and after execution
 
-Operational memory update (April 14, 2026 - post-execution completion for zero-surprises + external delegation)
+### Operational memory update: April 14, 2026 - post-execution completion for zero-surprises + external delegation
 
 - External delegation mechanism implemented as a first-class project capability:
   - `docs/collab/external-inbox/` and `docs/collab/external-outbox/` added
@@ -523,7 +523,7 @@ Operational memory update (April 14, 2026 - post-execution completion for zero-s
   - normalize `gh` diagnostics access to check annotations (credential type/permission model)
   - verify account-level Actions quota/spending/runner policy in GitHub web settings
 
-Operational memory update (April 14, 2026 - post-push verification)
+### Operational memory update: April 14, 2026 - post-push verification
 
 - Commit pushed to `origin/main`:
   - `c5492d5` - external delegation + GitHub zero-surprises assets
@@ -541,7 +541,7 @@ Operational memory update (April 14, 2026 - post-push verification)
   - verify runner availability/policy for this private repo
   - switch diagnostics auth mode to one that can read check annotations from CLI
 
-Operational memory update (April 14, 2026 - deferred intake after active execution)
+### Operational memory update: April 14, 2026 - deferred intake after active execution
 
 - User added a new future subsystem request:
   - "Temporales por Externo" (per-externo temporary workspaces)
@@ -550,7 +550,7 @@ Operational memory update (April 14, 2026 - deferred intake after active executi
   - repeated `stream disconnected before completion` interruptions
 - Both were intentionally deferred to the next implementation wave (current execution remained uninterrupted) and recorded in roadmap pending integral items.
 
-Operational memory update (April 14, 2026 - big problem formalization for external solvers)
+### Operational memory update: April 14, 2026 - big problem formalization for external solvers
 
 - Persistent GitHub Actions blocker has been formalized as a dedicated incident file:
   - `docs/github/actions-root-cause-incident.md`
@@ -558,7 +558,7 @@ Operational memory update (April 14, 2026 - big problem formalization for extern
   - `EXT-ACTIONS-ROOTCAUSE-001`
 - This ensures major operational blockers are no longer implicit chat knowledge; they are now visible and actionable inside the project for externos.
 
-Operational memory update (April 14, 2026 - deferred subsystem intake: Help Solve or Help Solve Better)
+### Operational memory update: April 14, 2026 - deferred subsystem intake: Help Solve or Help Solve Better
 
 - User requested a full subsystem to report serious problems and invite externos to solve or improve solutions.
 - Required qualities captured:
@@ -570,7 +570,7 @@ Operational memory update (April 14, 2026 - deferred subsystem intake: Help Solv
   - accepted as next-wave subsystem without interrupting active execution
   - recorded as integral pending item in roadmap
 
-Operational memory update (April 14, 2026 - session pause handoff for Claude inspection)
+### Operational memory update: April 14, 2026 - session pause handoff for Claude inspection
 
 - User requested a project update before pausing Codex so Claude can inspect the workspace and GitHub state.
 - Reconfirmed before pause:

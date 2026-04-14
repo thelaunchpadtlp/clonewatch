@@ -37,6 +37,8 @@ jobs:
           fi
 
           CHANGED_FILES="$(git diff --name-only "$RANGE" || true)"
+          IGNORED_PATTERN='^(docs/temp/|docs/sessions/|docs/collab/session-log\.jsonl$|docs/collab/handoffs/|docs/collab/collab\.sqlite$)'
+          CHANGED_FILES="$(printf '%s\n' "$CHANGED_FILES" | grep -Ev "$IGNORED_PATTERN" || true)"
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
@@ -79,4 +81,3 @@ jobs:
           echo "- docs/collab/session-log.jsonl"
           echo "- docs/collab/handoffs/<timestamp>-<owner>.md"
           exit 1
-
