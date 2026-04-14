@@ -139,3 +139,18 @@ These are considered the active baseline automations for the current phase.
   - CodeQL still runs on `main` pushes
   - CodeQL still runs on scheduled cadence
 - Operational goal: preserve meaningful security signal while removing low-value noise from automated dependency PR traffic.
+
+## Core Delivery 1-3 Integration (April 14, 2026)
+
+- Copy phase now includes `rsync` dry-run estimation before execution:
+  - estimates transferred files and bytes
+  - keeps reinforcement jobs transparent and efficient
+- Verification engine now respects selected verification mode:
+  - `size-only` ignores metadata deltas
+  - `metadata` flags metadata deltas (permissions, modified date, symlink target)
+  - checksum comparison remains active only in checksum modes
+- Runtime now passes `CloneJob.verificationMode` into verification compare logic.
+- Test coverage expanded for:
+  - incremental copy argument behavior
+  - dry-run summary parsing
+  - size-only vs metadata verification behavior

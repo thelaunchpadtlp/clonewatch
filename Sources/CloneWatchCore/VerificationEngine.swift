@@ -3,7 +3,11 @@ import Foundation
 public struct VerificationEngine: Sendable {
     public init() {}
 
-    public func compare(source: InventorySnapshot, destination: InventorySnapshot) -> VerificationResult {
+    public func compare(
+        source: InventorySnapshot,
+        destination: InventorySnapshot,
+        mode: VerificationMode = .metadata
+    ) -> VerificationResult {
         let sourceMap = Dictionary(uniqueKeysWithValues: source.entries.map { ($0.relativePath, $0) })
         let destinationMap = Dictionary(uniqueKeysWithValues: destination.entries.map { ($0.relativePath, $0) })
         let allKeys = Set(sourceMap.keys).union(destinationMap.keys).sorted()
@@ -54,7 +58,7 @@ public struct VerificationEngine: Sendable {
                         )
                     )
                     differentCount += 1
-                } else if lhs.checksum != nil && rhs.checksum != nil && lhs.checksum != rhs.checksum {
+                } else if shouldCompareChecksums(mode: mode, lhs: lhs, rhs: rhs) {
                     differences.append(
                         DifferenceEntry(
                             relativePath: key,
@@ -65,14 +69,14 @@ public struct VerificationEngine: Sendable {
                         )
                     )
                     differentCount += 1
-                } else if lhs.permissions != rhs.permissions {
+                } else if shouldCompareMetadata(mode: mode), let detail = metadataDifferenceDetail(lhs: lhs, rhs: rhs) {
                     differences.append(
                         DifferenceEntry(
                             relativePath: key,
                             status: .differentMetadata,
                             sourceSize: lhs.size,
                             destinationSize: rhs.size,
-                            detail: "Permissions differ."
+                            detail: detail
                         )
                     )
                     warningCount += 1
@@ -131,5 +135,28 @@ public struct VerificationEngine: Sendable {
                 safeToDeleteSource: safeToDelete
             )
         )
+    }
+
+    private func shouldCompareMetadata(mode: VerificationMode) -> Bool {
+        mode != .sizeOnly
+    }
+
+    private func shouldCompareChecksums(mode: VerificationMode, lhs: InventoryEntry, rhs: InventoryEntry) -> Bool {
+        guard mode == .checksumFull || mode == .checksumSampled else { return false }
+        guard let lhsChecksum = lhs.checksum, let rhsChecksum = rhs.checksum else { return false }
+        return lhsChecksum != rhsChecksum
+    }
+
+    private func metadataDifferenceDetail(lhs: InventoryEntry, rhs: InventoryEntry) -> String? {
+        if lhs.permissions != rhs.permissions {
+            return "Permissions differ."
+        }
+        if lhs.modifiedAt != rhs.modifiedAt {
+            return "Modification dates differ."
+        }
+        if lhs.symlinkTarget != rhs.symlinkTarget {
+            return "Symlink targets differ."
+        }
+        return nil
     }
 }

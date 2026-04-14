@@ -278,3 +278,21 @@ Operational memory update (April 14, 2026 - CodeQL signal cleanup)
 - Security intent preserved:
   - keep CodeQL on mainline and scheduled runs
   - reduce noisy non-actionable failures in dashboard view
+
+Operational memory update (April 14, 2026 - integrated 1-3 implementation pass)
+
+- Efficiency-focused implementation pass completed across copy + verification + runtime flow.
+- CopyEngine upgrade:
+  - added pre-copy rsync dry-run estimation
+  - logs estimated transferred files/bytes before actual copy
+  - keeps reinforcement workflows transparent and aligned with "copy only what changed"
+- Verification upgrade:
+  - comparison now respects selected verification mode
+  - `size-only` avoids metadata warnings
+  - `metadata` includes permissions/modified-at/symlink-target checks
+  - checksum differences are evaluated only in checksum modes
+- Runtime wiring:
+  - `CloneWatchRuntime` now passes `job.verificationMode` into verification compare call
+- Reliability:
+  - new tests added for dry-run parsing, incremental argument building, and verification-mode behavior
+  - test suite passed after changes

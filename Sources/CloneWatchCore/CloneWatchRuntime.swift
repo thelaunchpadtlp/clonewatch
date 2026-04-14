@@ -31,7 +31,11 @@ public final class CloneWatchRuntime {
         let sourceSnapshot = inventoryEngine.scan(root: job.source.url, depth: job.inventoryDepth, verificationMode: job.verificationMode)
         log.append(RunLogEvent(level: "info", message: "Starting destination inventory scan."))
         let destinationSnapshot = inventoryEngine.scan(root: job.destination.url, depth: job.inventoryDepth, verificationMode: job.verificationMode)
-        let verification = verificationEngine.compare(source: sourceSnapshot, destination: destinationSnapshot)
+        let verification = verificationEngine.compare(
+            source: sourceSnapshot,
+            destination: destinationSnapshot,
+            mode: job.verificationMode
+        )
         log.append(RunLogEvent(level: "info", message: "Verification finished with confidence \(verification.summary.confidence)."))
         let ledger = try ledgerEngine.createBundle(
             job: job,
