@@ -9,6 +9,7 @@ Multiple agentic tools can work on this project over time. To avoid conflicts, C
 - one active writer by default (`Single Writer`)
 - durable logs for every meaningful step
 - reproducible handoffs between sessions and tools
+- structured delegation for **externos** (external apps/agents/developers/AI systems)
 
 ## Operating modes
 
@@ -23,6 +24,10 @@ If there is any doubt, use `single-writer`.
 `BEGIN -> CLAIM_LOCK -> SYNC -> WORK -> VALIDATE -> RECORD -> PUSH -> HANDOFF -> RELEASE`
 
 Each state must be logged in `docs/collab/session-log.jsonl`.
+
+For externally delegated work, use:
+
+`EXTERNAL_TASK_NEW -> CLAIMED -> (INFO)* -> DONE | BLOCKED | REJECTED`
 
 ## Single Writer play-by-play
 
@@ -87,3 +92,31 @@ Do not force-replace an active lock without a recorded incident.
 - lock lifecycle trace (`claim` and `release`, or recovery trace)
 - one handoff note in `docs/collab/handoffs/`
 
+## External delegation protocol (mandatory)
+
+### Official naming
+
+- **externos**: any external app/agent/developer/AI system outside the active writer session.
+
+### Channels
+
+- inbox: `docs/collab/external-inbox/`
+- outbox: `docs/collab/external-outbox/`
+
+### Rules
+
+1. externos can create tasks in inbox (`NEW`) but cannot bypass lock rules.
+2. only active lock owner may claim and execute (`CLAIMED`).
+3. every status update must emit outbox event + JSONL event + SQLite evidence.
+4. terminal task status must be one of:
+   - `DONE`
+   - `BLOCKED`
+   - `REJECTED`
+
+### Recommended commands
+
+```bash
+tools/collab/external-new-task.sh ...
+tools/collab/external-claim-task.sh ...
+tools/collab/external-update-task.sh ...
+```

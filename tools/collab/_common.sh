@@ -23,7 +23,12 @@ sql_escape() {
 
 ensure_collab_paths() {
   local root="$1"
-  mkdir -p "$root/.clonewatch" "$root/docs/collab/handoffs" "$root/tools/collab"
+  mkdir -p \
+    "$root/.clonewatch" \
+    "$root/docs/collab/handoffs" \
+    "$root/docs/collab/external-inbox" \
+    "$root/docs/collab/external-outbox" \
+    "$root/tools/collab"
 }
 
 lock_file() {
@@ -44,6 +49,16 @@ collab_db_file() {
 collab_schema_file() {
   local root="$1"
   printf '%s/docs/collab/schema.sql' "$root"
+}
+
+external_inbox_dir() {
+  local root="$1"
+  printf '%s/docs/collab/external-inbox' "$root"
+}
+
+external_outbox_dir() {
+  local root="$1"
+  printf '%s/docs/collab/external-outbox' "$root"
 }
 
 ensure_collab_db() {
@@ -95,4 +110,3 @@ read_lock_value() {
   local key="$2"
   grep -E "\"$key\"[[:space:]]*:" "$file" | head -n1 | sed -E 's/^[^:]+:[[:space:]]*"?([^",}]+)"?,?$/\1/'
 }
-

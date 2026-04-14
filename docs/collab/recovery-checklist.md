@@ -5,8 +5,8 @@
 3. Reclaim lock with a new `session_id`.
 4. Read last entries in `docs/collab/session-log.jsonl`.
 5. Read latest file in `docs/collab/handoffs/`.
-6. Re-run `git status -sb`, `git fetch`, and `swift test` before new edits.
-7. Continue from last confirmed state, then log `RECOVERY_COMPLETE`.
+6. Check `docs/collab/external-inbox/` and `docs/collab/external-outbox/` for delegated tasks in `CLAIMED` or `BLOCKED`.
+7. Re-run `git status -sb`, `git fetch`, and `swift test` before new edits.
+8. Continue from last confirmed state, then log `RECOVERY_COMPLETE`.
 
 Never continue silently after interruption.
-

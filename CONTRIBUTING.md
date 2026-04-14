@@ -60,3 +60,24 @@ tools/collab/recover-interrupted-session.sh --owner "<name>" --agent-app "<app>"
 ```
 
 Do not bypass lock ownership without explicit recovery trace.
+
+## External delegation (mandatory when externos participate)
+
+Official term:
+
+- **externos**: external apps/agents/developers/AI systems.
+
+Required behavior:
+
+1. externos submit tasks through `docs/collab/external-inbox/` (or `tools/collab/external-new-task.sh`)
+2. only active lock owner can claim (`tools/collab/external-claim-task.sh`)
+3. progress/completion/blockers must be written to `docs/collab/external-outbox/` (`tools/collab/external-update-task.sh`)
+4. every event must be traceable in `session-log.jsonl` and `collab.sqlite`
+
+## Codex commit/PR settings
+
+Use:
+
+- `docs/github/codex-commit-pr-instructions.md`
+
+as the source of truth for Commit Instructions and PR Instructions in Codex.

@@ -12,9 +12,12 @@ CloneWatch is a macOS-first cloning, verification, and storage-migration project
 ## Strategic docs
 
 - `docs/roadmap/macos-first-class-adoption.md`: prioritized adoption map (Now / Next / Later / Pending integral)
+- `docs/roadmap/v1-productized-gates.md`: gate-based path to productized V1
 - `docs/decisions/macos-prioritization-framework.md`: decision rule for high-impact feature intake
 - `docs/collab/protocol.md`: multi-agent operating protocol with Single Writer as default
 - `docs/collab/agent-capability-matrix.md`: practical role/risk matrix for external agentic apps
+- `docs/github/auth-access-policy.md`: GitHub auth/access model (principal + break-glass)
+- `docs/github/codex-commit-pr-instructions.md`: copy-paste commit/PR settings for Codex
 - `CHANGELOG.md`: detailed change history
 
 ## Current architecture
@@ -86,7 +89,7 @@ These automations are healthy because they protect quality and security without 
 
 ## Current status
 
-This repo has been bootstrapped locally but may still need GitHub authentication on this Mac before `git push` works from Terminal.
+This repo is currently authenticated for GitHub CLI on this Mac. Keep credentials rotated and least-privileged.
 
 ## Codex Git Push Capability (local environment)
 
@@ -132,3 +135,27 @@ If the session was interrupted, use:
 ```bash
 tools/collab/recover-interrupted-session.sh --owner "Your Name" --agent-app "ChatGPT Desktop" --session-id "session-002"
 ```
+
+## External delegation (externos)
+
+Official nomenclature:
+
+- **externos** = external apps/agents/developers/AI systems outside the active writer session.
+
+Official channels:
+
+- `docs/collab/external-inbox/` for incoming tasks
+- `docs/collab/external-outbox/` for progress/results back to externos
+
+Fast commands:
+
+```bash
+tools/collab/external-new-task.sh ...
+tools/collab/external-claim-task.sh ...
+tools/collab/external-update-task.sh ...
+```
+
+Every external-task event must also exist in:
+
+- `docs/collab/session-log.jsonl`
+- `docs/collab/collab.sqlite`

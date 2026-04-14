@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clonewatch.local/schemas/external-task-event.schema.json",
+  "title": "ExternalTaskEvent",
+  "type": "object",
+  "required": [
+    "task_id",
+    "timestamp",
+    "event",
+    "status",
+    "owner",
+    "agent_app",
+    "session_id",
+    "message"
+  ],
+  "properties": {
+    "task_id": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "event": {
+      "type": "string",
+      "enum": ["NEW", "CLAIMED", "BLOCKED", "DONE", "REJECTED", "INFO"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ok", "warn", "error"]
+    },
+    "owner": { "type": "string", "minLength": 1 },
+    "agent_app": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "message": { "type": "string", "minLength": 1 },
+    "artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "questions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

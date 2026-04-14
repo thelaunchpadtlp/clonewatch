@@ -1,0 +1,21 @@
+{
+  "task_id": "EXT-YYYYMMDD-HHMMSS",
+  "created_at": "2026-04-14T00:00:00Z",
+  "from_external_app": "Claude Desktop",
+  "requester": "operator-name",
+  "title": "Short task title",
+  "objective": "What must be achieved",
+  "target_paths": [
+    "Sources/CloneWatchCore",
+    "docs/collab"
+  ],
+  "acceptance_criteria": [
+    "Build passes",
+    "Tests pass",
+    "Memory updated"
+  ],
+  "priority": "normal",
+  "urgency": "soon",
+  "status": "NEW",
+  "owner": "unassigned"
+}

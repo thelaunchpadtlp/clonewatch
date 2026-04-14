@@ -4,6 +4,10 @@ Date: 2026-04-14
 
 This roadmap converts the long checklist into an execution model that is ambitious but token/time efficient.
 
+V1 release gating companion:
+
+- `docs/roadmap/v1-productized-gates.md`
+
 Default intake rule:
 
 - when conversation logic implies a meaningful capability addition, it is added here by default (even if not explicitly requested as "update roadmap")
@@ -47,6 +51,8 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
 - [x] Policy-driven memory governance
 - [x] Multi-agent CollabOps baseline (single-writer lock + session log + handoff protocol)
 - [x] `Collab Guard` workflow for critical-change traceability
+- [x] External delegation channels (`external-inbox` / `external-outbox`) with session + SQLite evidence
+- [x] GitHub auth/access policy and diagnostics script (`diagnose-github-actions.sh`)
 - [ ] macOS signing/notarization pipeline scaffolding
 - [ ] Hardened runtime validation in CI
 
@@ -59,6 +65,7 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
 - [ ] App Intents + basic Shortcuts actions for core jobs
 - [ ] Notification pipeline for long runs (start/completion/actionable alerts)
 - [ ] Security-scoped bookmarks for persistent folder permissions
+- [ ] Gate A closure: GitHub Actions infra constraints resolved (minutes/policy/runners) with latest `main` green
 
 ## LATER (strategic platform integrations)
 
@@ -84,6 +91,7 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
   - plugin model evaluation
 - [ ] Universal links / URL schemes for external orchestration
 - [ ] Advanced multi-agent orchestration dashboard (cross-tool visibility and metrics)
+- [ ] Optional automation bridge so externos can open tasks through connectors/APIs directly into `external-inbox`
 
 ## Explicit deprioritization for current product stage
 

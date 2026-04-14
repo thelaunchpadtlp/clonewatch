@@ -1,0 +1,14 @@
+{
+  "task_id": "EXT-DEMO-001",
+  "timestamp": "2026-04-14T16:51:43Z",
+  "event": "NEW",
+  "status": "ok",
+  "owner": "external-requester",
+  "agent_app": "Claude Desktop",
+  "session_id": "external-EXT-DEMO-001",
+  "message": "External task created and queued in inbox.",
+  "artifacts": [
+    "docs/collab/external-inbox/EXT-DEMO-001.json"
+  ],
+  "questions": []
+}

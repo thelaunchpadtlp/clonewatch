@@ -94,3 +94,8 @@ The lock record is `.clonewatch/agent-lock.json` and session evidence is stored 
 - `docs/collab/session-log.jsonl`
 - `docs/collab/handoffs/*`
 - `docs/collab/collab.sqlite`
+
+External delegation channels for cross-tool collaboration:
+
+- `docs/collab/external-inbox/*` (incoming task requests from externos)
+- `docs/collab/external-outbox/*` (status/results back to externos)

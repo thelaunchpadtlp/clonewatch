@@ -17,6 +17,19 @@ All notable project changes are recorded here.
 - single-writer operational scripts (`begin-session`, `claim-lock`, `record-step`, `handoff`, `release-lock`, `recover-interrupted-session`, `self-test`, `update-sqlite`)
 - `Collab Guard` GitHub Actions workflow
 - Actions triage guide (`docs/github/actions-triage.md`)
+- external delegation channels:
+  - `docs/collab/external-inbox/`
+  - `docs/collab/external-outbox/`
+- external task contracts:
+  - `docs/schemas/external-task-request.schema.json`
+  - `docs/schemas/external-task-event.schema.json`
+- external task scripts:
+  - `external-new-task.sh`
+  - `external-claim-task.sh`
+  - `external-update-task.sh`
+- GitHub auth/access policy (`docs/github/auth-access-policy.md`)
+- Codex commit/PR instruction source (`docs/github/codex-commit-pr-instructions.md`)
+- Actions diagnostics script (`tools/collab/diagnose-github-actions.sh`)
 
 ### Changed
 
@@ -28,6 +41,7 @@ All notable project changes are recorded here.
 - CodeQL and Memory Guard bot-noise handling refined
 - Memory and project-record guards now include CollabOps-sensitive paths (`tools/collab`, `docs/collab`, `docs/schemas`)
 - CI now uses bot-noise filter and per-ref concurrency for cleaner signal
+- Collab schema expanded with `external_tasks` and `external_task_events` tables
 
 ### Fixed
 

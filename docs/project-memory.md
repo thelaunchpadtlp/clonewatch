@@ -266,3 +266,48 @@ These are considered the active baseline automations for the current phase.
   - SQLite record counts confirm logging/handoff/lock events persisted
   - `swift build` passed
   - `swift test` passed (7/7)
+
+## Execution Checkpoint (Pre-execution - GitHub Zero-Surprises + External Delegation) (April 14, 2026)
+
+- User approved immediate execution of:
+  - GitHub zero-surprises closure
+  - external delegation mechanism with low token/compute overhead
+  - multi-agent/multi-app access standardization with least-privilege defaults
+  - stronger operational docs and copy-paste commit/PR guidance
+  - V1 productized gate path hardening
+- Current pre-execution facts:
+  - local repo is clean and synced on `main`
+  - `gh` is logged in
+  - latest `main` workflow failures show very fast job exits with empty `steps` arrays
+  - likely cause class is account/runner/policy/billing, not app code logic
+- Mandatory implementation scope for this pass:
+  - add `external-inbox` and `external-outbox` contracts and scripts
+  - persist external-task lifecycle evidence in `session-log.jsonl` and `collab.sqlite`
+  - publish GitHub auth/access policy (principal + break-glass + no over-privilege default)
+  - add operational diagnostics script/runbook for Actions root-cause triage
+
+## Execution Checkpoint (Post-execution - GitHub Zero-Surprises + External Delegation) (April 14, 2026)
+
+- Implemented external delegation as an integral project mechanism:
+  - `docs/collab/external-inbox/` and `docs/collab/external-outbox/`
+  - external task request/event schemas
+  - operational scripts:
+    - `external-new-task.sh`
+    - `external-claim-task.sh`
+    - `external-update-task.sh`
+  - SQLite schema extended with `external_tasks` and `external_task_events`
+- Implemented GitHub zero-surprises support assets:
+  - auth/access policy doc
+  - copy-paste Codex commit/PR instruction doc
+  - diagnostics script for latest-main workflow triage
+  - triage guide expanded for rapid pre-step failure pattern (`steps: []`)
+- Validation completed:
+  - `swift build` passed
+  - `swift test` passed (7/7)
+  - external-task e2e smoke flow passed (`EXT-DEMO-001`: NEW -> CLAIMED -> DONE)
+- Current blocker class remains external to source code:
+  - latest `main` workflow failures still show pre-step exits with no executed steps
+  - likely account-level policy/quota/runner gating issue
+- Remaining owner-side actions:
+  - ensure diagnostics-capable GitHub auth mode for CLI check annotations
+  - confirm Actions minutes/quota/spending and runner policy in GitHub account settings

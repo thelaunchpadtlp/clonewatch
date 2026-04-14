@@ -1,0 +1,12 @@
+{
+  "task_id": "EXT-DEMO-001",
+  "timestamp": "2026-04-14T16:51:43Z",
+  "event": "CLAIMED",
+  "status": "ok",
+  "owner": "Codex",
+  "agent_app": "ChatGPT-Codex",
+  "session_id": "codex-20260414-github-zero-surprises",
+  "message": "Claimed for protocol test",
+  "artifacts": [],
+  "questions": []
+}

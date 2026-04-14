@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS raw_session_log (
 );
 "
 sqlite3 "$DB" "$TMP_TABLE_SQL"
+sqlite3 "$DB" "PRAGMA busy_timeout=5000;"
 
 while IFS= read -r line; do
   [[ -z "$line" ]] && continue
@@ -33,4 +34,3 @@ while IFS= read -r line; do
 done < "$LOG"
 
 echo "SQLite updated from session-log.jsonl"
-

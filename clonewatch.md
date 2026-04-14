@@ -399,3 +399,54 @@ Operational memory update (April 14, 2026 - post-implementation CollabOps + GitH
   - JSON schema syntax checks passed
   - SQLite evidence tables populated
   - full Swift build/test passed
+
+Operational memory update (April 14, 2026 - pre-execution checkpoint for GitHub zero-surprises + external delegation)
+
+- User approved immediate execution of an ultra-efficient plan with five fronts:
+  - GitHub zero-surprises operational closure
+  - multi-app/multi-agent access standardization
+  - first-class delegation channel for external tools/agents ("externos")
+  - documentation hardening with explicit operating standards
+  - efficient roadmap to V1 productized gates
+- Pre-execution technical situation:
+  - local repo is synced on `main` and `gh` is logged in
+  - latest `main` workflows are red with rapid failures and empty step arrays (`steps: []`)
+  - evidence points to account/runner/policy/billing level issue rather than project code regression
+- Execution mandate for this pass:
+  - add structured external delegation inbox/outbox contracts + scripts + SQLite trace
+  - formalize minimum-safe GitHub auth/permission policy and commit/PR instruction templates
+  - add reproducible GitHub diagnostics workflow/runbook for root-cause triage
+  - update memory/roadmap/changelog/docs before and after execution
+
+Operational memory update (April 14, 2026 - post-execution completion for zero-surprises + external delegation)
+
+- External delegation mechanism implemented as a first-class project capability:
+  - `docs/collab/external-inbox/` and `docs/collab/external-outbox/` added
+  - lifecycle contracts added (`external-task-request`, `external-task-event`)
+  - external task scripts added:
+    - `external-new-task.sh`
+    - `external-claim-task.sh`
+    - `external-update-task.sh`
+  - SQLite schema expanded with:
+    - `external_tasks`
+    - `external_task_events`
+  - external event flow now writes to:
+    - outbox event files
+    - `session-log.jsonl`
+    - `collab.sqlite`
+- GitHub zero-surprises hardening added:
+  - auth/access policy document (`docs/github/auth-access-policy.md`)
+  - copy-paste Codex commit/PR instruction source (`docs/github/codex-commit-pr-instructions.md`)
+  - diagnostics script (`tools/collab/diagnose-github-actions.sh`)
+  - triage guide updated with infra-first failure handling for `steps: []` cases
+- Root-cause evidence status:
+  - latest mainline failures still show fast pre-step exits across CI/CodeQL/guards
+  - this strongly indicates account/policy/billing/runner constraints, not Swift code regression
+  - Actions permissions endpoint confirms repo Actions are enabled
+- Validation status:
+  - `swift build` passed
+  - `swift test` passed (7/7)
+  - external delegation end-to-end smoke flow passed (NEW -> CLAIMED -> DONE)
+- Pending manual/owner actions still required:
+  - normalize `gh` diagnostics access to check annotations (credential type/permission model)
+  - verify account-level Actions quota/spending/runner policy in GitHub web settings
