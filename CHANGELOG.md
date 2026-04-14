@@ -77,8 +77,12 @@ All notable project changes are recorded here.
 - Collab schema expanded with `external_tasks` and `external_task_events` tables
 - README now includes beginner-friendly local app test instructions and explicit guidance for Claude/externos during an active writer session
 - project memory now records the session-pause handoff and the `.claude/` local-tool-state observation
+- `Docs History Validation` now always emits a required check on PRs to `main`, while still skipping expensive regeneration when docs-history inputs did not change
+- custom CodeQL workflow now uses `github/codeql-action@v4` and explicit `swift build` instead of `autobuild`
 
 ### Fixed
 
 - robust SQLite ledger import path for runtime/test stability
 - stale/interrupted-session handling process documented and operationalized with recovery checklist and lock lifecycle controls
+- CodeQL SARIF conflict caused by running custom CodeQL alongside GitHub default Code Scanning setup
+- hidden merge blocker where ruleset-required `Docs History Validation` was missing on unrelated PRs because the workflow was path-filtered

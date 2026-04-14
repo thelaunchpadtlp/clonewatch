@@ -386,3 +386,19 @@ These are considered the active baseline automations for the current phase.
   - Codex: `/Users/piqui/Downloads/rollout-2026-04-14T02-17-48-019d8b11-6cb8-7290-b66a-9015d83bdd23.jsonl`
   - Claude: `/Users/piqui/Downloads/6e5936df-08ce-4e2a-8745-b235e0083df7.jsonl`
 - Still pending: CI fix (user action: make repo public), Codex guard updates, clonewatch body headers.
+
+## GitHub Actions Recovery Follow-up (April 14, 2026)
+
+- Codex reviewed Claude PR #4 and validated that workflow execution is healthy again on the public repo.
+- The original repo-wide `steps: []` blocker no longer appears to be the active issue.
+- Two more precise follow-up causes were identified:
+  1. GitHub default Code Scanning setup was enabled at the same time as the custom `codeql.yml` workflow.
+  2. Branch ruleset `Protect main` requires `Docs History Validation`, but that workflow only ran on selected paths, so unrelated PRs could not satisfy the required check set.
+- Corrections applied:
+  - default Code Scanning setup disabled through GitHub API
+  - custom CodeQL workflow hardened to `@v4` with explicit `swift build`
+  - `Docs History Validation` redesigned to always report on PRs to `main` while skipping expensive regeneration when inputs did not change
+  - `.claude/` marked local-only in `.gitignore`
+- Operational lesson:
+  - a repository can appear "green enough" to humans while still being unmergeable due to ruleset/check mismatches
+  - this class of problem must be documented in-project for externos and future agents

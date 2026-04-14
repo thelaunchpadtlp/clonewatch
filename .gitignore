@@ -19,3 +19,6 @@ docs/chat-history/raw-pdfs/*.pdf
 # Local SQLite sidecars
 docs/collab/*.sqlite-shm
 docs/collab/*.sqlite-wal
+
+# Local Claude Desktop workspace state should remain local-only.
+.claude/

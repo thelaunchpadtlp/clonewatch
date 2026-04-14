@@ -2,7 +2,7 @@
 
 **This file is updated by each agent at session end. Always read this first.**
 
-Last updated: 2026-04-14 by Claude Code (session `6e5936df`, Wave 3 — final close)
+Last updated: 2026-04-14 by Codex (session `codex-20260414-203500`, post-Claude verification)
 
 ---
 
@@ -10,9 +10,9 @@ Last updated: 2026-04-14 by Claude Code (session `6e5936df`, Wave 3 — final cl
 
 | Field | Value |
 |---|---|
-| Active lock | **NONE** — workspace is free |
-| Last holder | Claude Code (session `6e5936df`) |
-| Released at | 2026-04-14 ~20:15 UTC |
+| Active lock | **HELD** — Codex (session `codex-20260414-203500`) |
+| Last holder | Codex |
+| Lease context | Documentation + CI/ruleset hardening after Claude PR verification |
 
 ---
 
@@ -20,35 +20,34 @@ Last updated: 2026-04-14 by Claude Code (session `6e5936df`, Wave 3 — final cl
 
 | Field | Value |
 |---|---|
-| Branch | `main` |
-| Last stable commit | `b3eed0d` — "feat(collabops): add CLAUDE.md, Sesiones Importantes, Temporales por Externo" |
+| Branch | `claude/wave2-automations-20260414` |
+| Last stable commit | `4ce5644` — latest commit on PR #4 before Codex follow-up |
 | Local build | `swift build` PASSES |
 | Local tests | `swift test` PASSES (7/7) |
-| GitHub Actions | FAILING — billing issue (see blocker) |
-| Pending PR | Wave 2 work to be pushed as PR (automations + session close) |
+| GitHub Actions | HEALTHY on PR #4; follow-up hardening in progress |
+| Pending PR | PR #4 open and green, but merge currently blocked by required-check design mismatch being fixed |
 
 ---
 
 ## Active blocker
 
-**GitHub Actions — billing/payment issue**
+**Merge gating mismatch on PR #4**
 
-- Cause: GitHub account payment has failed or spending limit needs to be increased
-- Confirmed via: `gh run view 24418476339` → annotation clearly states billing error
-- Previous diagnosis (minutes quota) was **incorrect** — corrected 2026-04-14
-- The main branch has a ruleset "Protect main" requiring 4 CI checks before merge
+- Cause: ruleset `Protect main` requires `Docs History Validation`, but that workflow was path-filtered and did not emit a check on unrelated PRs
+- Secondary resolved cause: custom CodeQL workflow conflicted with GitHub Code Scanning default setup
+- Confirmed via:
+  - `gh api repos/thelaunchpadtlp/clonewatch/rulesets/15050922`
+  - `gh api repos/thelaunchpadtlp/clonewatch/code-scanning/default-setup`
+  - `gh pr view 4 --json statusCheckRollup`
 - Detailed incident: `docs/github/actions-root-cause-incident.md`
 - External task: `docs/collab/external-inbox/EXT-ACTIONS-ROOTCAUSE-001.json`
 - Task for Codex: `docs/temp/codex-personal/tasks/TASK-CLAUDE-001-CI-FIX.md`
 
-**Action required by user:**
-1. Go to `https://github.com/settings/billing` (or org billing)
-2. Resolve payment failure or increase spending limit
-3. After billing is clear, tell Codex to open a PR for CI verification
-
-**Good news:** Repo is now PUBLIC (screenshot confirmed 2026-04-14). A CodeQL
-run auto-triggered. If billing is cleared, all standard workflow runs will be free
-on the public repo.
+**Current Codex fix path:**
+1. update `Docs History Validation` so it always emits a check on PRs to `main`
+2. harden custom CodeQL workflow (`@v4` + explicit `swift build`)
+3. push follow-up to PR branch
+4. merge PR #4 once required checks are all satisfied
 
 ---
 
@@ -64,7 +63,7 @@ on the public repo.
 - Left 3 task files for Codex in `docs/temp/codex-personal/tasks/`
 - Updated `clonewatch.md`, `docs/project-memory.md`, `CHANGELOG.md`
 
-## What was completed in Wave 2 of this Claude session (PR pending)
+## What was completed in Wave 2 of this Claude session (PR #4)
 
 - Created `tools/collab/claude-checkpoint.sh` — automation trigger script
 - Added Section 14 (Checkpoint Protocol) to `CLAUDE.md`
@@ -75,26 +74,31 @@ on the public repo.
 
 ---
 
-## CI state (final — all checks passing)
+## CI state (verified by Codex)
 
-PR #4 (`claude/wave2-automations-20260414`) is MERGEABLE:
-- CI build+test ✅ | Memory Guard ✅ | Collab Guard ✅ | Project Records Guard ✅ | CodeQL ✅
-- Merge when Codex is ready (or user can merge directly on GitHub)
+PR #4 (`claude/wave2-automations-20260414`) has green PR checks:
+- CI build+test ✅
+- Memory Guard ✅
+- Collab Guard ✅
+- Project Records Guard ✅
+- CodeQL ✅
 
-GitHub Actions: WORKING — repo is public, Actions runs are free and unlimited.
-CodeQL Default Setup: ACTIVE (user enabled it; runs in Security tab, free on public repos).
+However, merge is still blocked until `Docs History Validation` is made to report consistently for PRs required by the ruleset.
+
+GitHub Actions: WORKING on the public repository.
+CodeQL Default Setup: DISABLED so the custom workflow is authoritative.
 
 ## Pending items (priority order)
 
-1. **Codex: Merge PR #4** — all checks passing, mergeable now
-2. **Codex: TASK-CLAUDE-002** — update CI guard paths to exclude docs/temp/ and docs/sessions/
-3. **Codex: TASK-CLAUDE-003** — add markdown headers to clonewatch.md body
-4. **Codex: TASK-CLAUDE-004** — add proprietary LICENSE file (All Rights Reserved)
-5. **TASK-CLAUDE-001 resolved** — CI now working (repo public = free Actions). No billing action needed.
-6. **Sprint A (next Claude session)**: run app end-to-end, test clone + verify + ledger flow
+1. **Codex: land follow-up fix for `Docs History Validation` + CodeQL hardening**
+2. **Codex: merge PR #4**
+3. **Codex: TASK-CLAUDE-002** — update CI guard paths to exclude docs/temp/ and docs/sessions/
+4. **Codex: TASK-CLAUDE-003** — add markdown headers to clonewatch.md body
+5. **Codex: TASK-CLAUDE-004** — add proprietary LICENSE file (All Rights Reserved)
+6. **Sprint A**: run app end-to-end, test clone + verify + ledger flow
 7. **Next wave**: "Help Solve or Help Solve Better" subsystem design
 8. **Gate B**: macOS signing/notarization pipeline
-9. **NEXT tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
+9. **Next tier**: Settings scene (Cmd+,), App Intents, Notification pipeline
 10. **Pending**: Expanded accessibility, `.webloc` file for reports
 
 ---

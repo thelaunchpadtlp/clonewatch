@@ -622,3 +622,26 @@ Operational memory update (April 14, 2026 - session pause handoff for Claude ins
 - Codex briefing written: docs/temp/codex-personal/BRIEFING-FROM-CLAUDE-20260414.md.
 - Session close handoff: docs/collab/handoffs/20260414-201500-Claude.md.
 - Claude pausing for Mac app update. Workspace free. Codex can proceed.
+
+### Operational memory update: GitHub Actions follow-up after Claude PR review (Apr 14, 2026)
+
+- Codex verified PR #4 from Claude and confirmed the core PR checks are green:
+  - CI
+  - CodeQL
+  - Memory Guard
+  - Project Records Guard
+  - Collab Guard
+- A second merge blocker was discovered:
+  - ruleset `Protect main` requires `Docs History Validation`
+  - that workflow was path-filtered and therefore did not emit a check on unrelated PRs
+  - result: PR looked green but GitHub still blocked merge because a required check was missing
+- CodeQL root cause was also refined:
+  - GitHub default Code Scanning setup and the custom `codeql.yml` workflow were both active
+  - this produced SARIF processing failure on PR #4
+  - Codex disabled default setup and confirmed successful rerun
+- Follow-up hardening chosen:
+  - make `Docs History Validation` always emit a result on PRs to `main`
+  - upgrade custom CodeQL workflow to `github/codeql-action@v4`
+  - replace CodeQL autobuild with explicit `swift build`
+  - keep `.claude/` local-only by adding it to `.gitignore`
+- This incident and the attempted solutions must remain visible in-project so externos can propose even better or more permanent fixes.

@@ -3,17 +3,19 @@
 - Date: 2026-04-14
 - From: Claude Code (session `6e5936df`)
 - Priority: HIGH (blocks all CI guards)
-- Status: PARTIALLY DONE — see update below
-- Depends on: USER ACTION (see billing note)
+- Status: MOSTLY RESOLVED — Codex follow-up in progress
+- Depends on: Codex follow-up only
 
 ---
 
-## ⚠️ ROOT CAUSE CORRECTION (updated by Claude Code, same session)
+## Root cause timeline (corrected and extended)
 
-**Previous diagnosis was wrong.** The original TASK file said the cause was
-"GitHub Actions minutes quota exhausted for private repo." This was incorrect.
+### Incident A — original repo-wide failure
 
-**Actual root cause (confirmed via `gh run view`):**
+**Previous diagnosis was wrong.** The original task said the cause was
+"private repo minutes quota exhausted." That was incorrect.
+
+**Actual observed annotation (confirmed via `gh run view`):**
 
 ```
 The job was not started because recent account payments have failed or
@@ -21,70 +23,42 @@ your spending limit needs to be increased. Please check the 'Billing & plans'
 section in your settings.
 ```
 
-This is a **billing/payment issue at the GitHub account level**, not a minutes quota.
-Making the repo public may help for Actions (public repos get free minutes),
-but the payment failure is a separate account-level problem.
+This was a **billing/payment issue at the GitHub account level**, not a minutes quota.
+After the repository became public, normal workflow execution resumed.
 
-### What has been done since original task was written
+### Incident B — follow-up CodeQL / merge gating issue
 
-1. ✅ User made the repo public (screenshot confirmed).
-2. ✅ Claude attempted to push an empty commit to trigger CI — **push was rejected**
-   because the main branch has a ruleset ("Protect main") requiring 4 status checks
-   to pass before pushing directly to main: CI, CodeQL, Docs History Validation, Memory Guard.
-3. ✅ A new CodeQL run auto-triggered after repo went public (was "in_progress" at last check).
+Once CI started running again, a second issue appeared:
+
+- CodeQL failed because **GitHub default Code Scanning setup** and the custom
+  `codeql.yml` workflow were both active.
+- PR #4 then became merge-blocked because the ruleset requires
+  `Docs History Validation`, but that workflow only ran when certain paths changed.
+
+### What has been done
+
+1. ✅ Repo is public, and Actions are executing normally again.
+2. ✅ GitHub default Code Scanning setup was disabled with:
+   `gh api -X PATCH repos/thelaunchpadtlp/clonewatch/code-scanning/default-setup -f state='not-configured'`
+3. ✅ CodeQL reran successfully on PR #4.
+4. ⏳ Remaining fix: make `Docs History Validation` always emit a required check on PRs to `main`.
 
 ### What still needs to happen
 
 ---
 
-## Step 1 — USER action: Verify GitHub billing
+## Step 1 — Codex: land the follow-up workflow fix on PR #4
 
-1. Go to `https://github.com/settings/billing` (or org billing page)
-2. Check for failed payments or spending limit issues
-3. Resolve any outstanding payment or increase spending limit
-4. Confirm account is in good standing
+Update:
+- `.github/workflows/docs-history.yml` so PRs to `main` always emit `Docs History Validation`
+- `.github/workflows/codeql.yml` so custom CodeQL uses `@v4` and explicit `swift build`
+- `.gitignore` to ignore `.claude/`
 
----
-
-## Step 2 — Codex: Create a PR to trigger CI
-
-Since direct push to main is blocked by the branch ruleset, CI must be triggered
-via a Pull Request. Create a PR from any branch (or the existing `claude/ecstatic-noether`
-branch) to main.
-
-```bash
-cd /Users/Shared/Pruebas/CloneWatch
-
-# Option A: Use the existing worktree branch
-git push origin claude/ecstatic-noether
-gh pr create \
-  --base main \
-  --head claude/ecstatic-noether \
-  --title "ci: trigger CI verification after billing fix and repo visibility change" \
-  --body "$(cat <<'BODY'
-## Purpose
-
-Trigger CI to verify all workflows pass after:
-1. Repository visibility changed from private to public
-2. GitHub billing issue resolved
-
-## What changed
-
-No code changes — this PR exists to run status checks.
-
-## Expected result
-
-All 4 required checks pass: CI, CodeQL, Docs History Validation, Memory Guard.
-
-Collab trace: agent_app=ChatGPT-Codex
-Records updated: not required (CI verification only)
-BODY
-)"
-```
+Then push the branch and let PR #4 rerun.
 
 ---
 
-## Step 3 — Codex: Monitor CI and check results
+## Step 2 — Codex: monitor PR #4 checks
 
 ```bash
 # List recent runs
@@ -99,7 +73,7 @@ gh run view $(gh run list --repo thelaunchpadtlp/clonewatch --limit 1 --json dat
 
 ---
 
-## Step 4 — Codex: If CI passes, update incident record
+## Step 3 — Codex: if PR #4 is green, update incident record
 
 Edit `docs/github/actions-root-cause-incident.md`:
 - Change `Status: Open` → `Status: Resolved`
@@ -119,18 +93,16 @@ Resolution authors: User (billing fix) + ChatGPT-Codex (CI verification)
 
 ---
 
-## Step 5 — Codex: If CI passes, merge PR
+## Step 4 — Codex: if PR #4 is green, merge PR
 
 ```bash
 # Merge the PR (squash merge for clean history)
-gh pr merge --squash --delete-branch \
-  --subject "ci: verify CI passes after public repo + billing fix" \
-  --body "Collab trace: agent_app=ChatGPT-Codex"
+gh pr merge 4 --squash --delete-branch
 ```
 
 ---
 
-## Step 6 — Codex: Update external task and memory
+## Step 5 — Codex: update external task and memory
 
 ```bash
 cd /Users/Shared/Pruebas/CloneWatch
@@ -142,7 +114,7 @@ tools/collab/external-update-task.sh \
   --agent-app "ChatGPT-Codex" \
   --session-id "<your-session-id>" \
   --status "DONE" \
-  --message "Resolved: billing issue fixed, repo made public, all CI workflows pass."
+  --message "Resolved in two stages: repo visibility restored workflow execution; CodeQL default setup disabled; Docs History Validation now always reports required status on PRs."
 ```
 
 Append to `clonewatch.md`:
@@ -189,8 +161,8 @@ git push origin main
 
 ## Definition of done
 
-- [ ] GitHub billing issue resolved (user action)
-- [ ] CI, CodeQL, Memory Guard, Project Records Guard, Collab Guard all pass on PR
+- [x] GitHub billing/private-repo execution blocker mitigated
+- [ ] CI, CodeQL, Memory Guard, Project Records Guard, Docs History Validation all pass on PR
 - [ ] PR merged to main
 - [ ] `docs/github/actions-root-cause-incident.md` marked Resolved (with corrected root cause)
 - [ ] External task `EXT-ACTIONS-ROOTCAUSE-001` marked DONE
