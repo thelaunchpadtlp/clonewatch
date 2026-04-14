@@ -1,7 +1,7 @@
 # Incident: GitHub Actions Reliability and Merge-Gating Failures
 
 Date opened: 2026-04-14  
-Status: Mitigated and documented (follow-up hardening applied)
+Status: Resolved and documented
 
 ## Executive summary
 
@@ -71,10 +71,45 @@ This first issue was consistent with GitHub account/repository execution gating 
    - run explicit `swift build` instead of relying on `autobuild`
 5. Updated `Docs History Validation` so it always reports a result on PRs to `main`, while still skipping expensive regeneration when docs-history inputs did not change.
 
+### Final root-cause refinement
+
+After the workflow hardening landed, a final merge blocker still remained on PR #4 even though all visible PR checks were green.
+
+The exact cause was a **ruleset-to-check-name mismatch**:
+
+- the `Protect main` ruleset required these contexts:
+  - `CI`
+  - `CodeQL`
+  - `Docs History Validation`
+  - `Memory Guard`
+- GitHub was actually emitting these actionable checks for the PR commit:
+  - `build-and-test`
+  - `CodeQL`
+  - `validate-doc-history`
+  - `enforce-memory-update`
+
+This meant GitHub could only positively match 3 of the 4 required checks at merge time, even though the PR looked green in the UI.
+
+### Final corrective action
+
+The minimal and correct fix was to update the repository ruleset so that it requires the **actual emitted check names**:
+
+- `build-and-test`
+- `CodeQL`
+- `validate-doc-history`
+- `enforce-memory-update`
+
+This ruleset correction was applied directly via GitHub API, after confirming there was no second hidden branch-protection layer.
+
 ### Result
 
-- PR #4 is now expected to satisfy the required status-check model without hidden missing checks.
+- PR #4 merged successfully after the ruleset contexts were aligned with the emitted checks.
 - CodeQL configuration is no longer split between GitHub default setup and custom workflow logic.
+- `Docs History Validation` now always emits a required check on PRs to `main`.
+- The repository now has a reproducible incident record covering:
+  - private-repo execution gating
+  - CodeQL/default-setup conflict
+  - hidden merge blockage caused by ruleset/check-name mismatch
 
 ## External solver notes
 
