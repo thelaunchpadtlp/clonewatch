@@ -92,6 +92,13 @@ Build CloneWatch as a first-class macOS utility for non-technical users:
 - [ ] Universal links / URL schemes for external orchestration
 - [ ] Advanced multi-agent orchestration dashboard (cross-tool visibility and metrics)
 - [ ] Optional automation bridge so externos can open tasks through connectors/APIs directly into `external-inbox`
+- [ ] "Temporales por Externo" subsystem:
+  - per-externo temporary workspaces
+  - inventory and event logs
+  - strict isolation + anti-contamination safeguards
+  - explicit "exceptional use" policy (collaboration-first remains default)
+- [ ] Reliability hardening for interrupted streams (`stream disconnected before completion`) with runbook + safeguards
+- [ ] Enforcement model so externos must read/acknowledge project standards before write operations
 
 ## Explicit deprioritization for current product stage
 

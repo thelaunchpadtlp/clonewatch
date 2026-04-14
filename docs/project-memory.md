@@ -326,3 +326,12 @@ These are considered the active baseline automations for the current phase.
   - jobs exit in seconds with empty step lists (`steps: []`) across macOS and Ubuntu workflows
 - Conclusion:
   - repository code and local tests are green; active blocker class is GitHub account/runner/policy/quota.
+
+## New Pending Intake (Deferred After Current Execution) (April 14, 2026)
+
+- User requested a future subsystem named conceptually as "Temporales por Externo":
+  - per-externo temporary folders for private interim notes/artifacts
+  - detailed inventory/logging/audit traces for that subsystem
+  - explicit policy that this mode is exceptional, while shared-collaborative mode stays preferred
+- User also requested resilient design against repeated "stream disconnected before completion" interruptions.
+- Both items were accepted as pending integral roadmap work (not implemented in this pass).

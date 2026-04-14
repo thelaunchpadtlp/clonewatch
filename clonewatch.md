@@ -468,3 +468,12 @@ Operational memory update (April 14, 2026 - post-push verification)
   - verify Actions usage quota/spending status
   - verify runner availability/policy for this private repo
   - switch diagnostics auth mode to one that can read check annotations from CLI
+
+Operational memory update (April 14, 2026 - deferred intake after active execution)
+
+- User added a new future subsystem request:
+  - "Temporales por Externo" (per-externo temporary workspaces)
+  - with contracts, logs, inventories, safeguards, and explicit exceptional-use policy
+- User also requested project-level resilience strategy against:
+  - repeated `stream disconnected before completion` interruptions
+- Both were intentionally deferred to the next implementation wave (current execution remained uninterrupted) and recorded in roadmap pending integral items.
