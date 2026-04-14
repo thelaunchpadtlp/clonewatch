@@ -27,10 +27,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect bundled raw PDFs
+        id: detect_pdfs
+        run: |
+          shopt -s nullglob
+          files=(docs/chat-history/raw-pdfs/*.pdf)
+          if [ ${#files[@]} -gt 0 ]; then
+            echo "has_pdfs=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_pdfs=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Rebuild extracted chat history
+        if: steps.detect_pdfs.outputs.has_pdfs == 'true'
         run: swift run CloneWatchDocsTool
 
       - name: Ensure generated docs are committed
+        if: steps.detect_pdfs.outputs.has_pdfs == 'true'
         run: |
           if ! git diff --quiet; then
             echo "Generated chat-history artifacts are out of date."
@@ -38,3 +51,10 @@ jobs:
             git diff -- docs/chat-history
             exit 1
           fi
+
+      - name: Explain skipped validation when PDFs are local-only
+        if: steps.detect_pdfs.outputs.has_pdfs != 'true'
+        run: |
+          echo "No raw PDFs were found in docs/chat-history/raw-pdfs on this runner."
+          echo "Skipping regeneration check because raw PDFs are intentionally local-only and excluded from Git."
+          echo "Canonical extracted Markdown and manifest remain versioned."
