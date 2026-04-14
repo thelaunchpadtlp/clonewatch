@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# clonewatch
-clonewatch
-=======
 # CloneWatch
 
 CloneWatch is a macOS-first cloning, verification, and storage-migration project.
@@ -79,4 +75,3 @@ These automations are healthy because they protect quality and security without 
 ## Current status
 
 This repo has been bootstrapped locally but may still need GitHub authentication on this Mac before `git push` works from Terminal.
->>>>>>> 7fcc21b (Initial CloneWatch v2 foundation)
