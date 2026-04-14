@@ -450,3 +450,21 @@ Operational memory update (April 14, 2026 - post-execution completion for zero-s
 - Pending manual/owner actions still required:
   - normalize `gh` diagnostics access to check annotations (credential type/permission model)
   - verify account-level Actions quota/spending/runner policy in GitHub web settings
+
+Operational memory update (April 14, 2026 - post-push verification)
+
+- Commit pushed to `origin/main`:
+  - `c5492d5` - external delegation + GitHub zero-surprises assets
+- Latest-main workflow status after push:
+  - `CI`: failed
+  - `CodeQL`: failed
+  - `Memory Guard`: failed
+  - `Project Records Guard`: failed
+  - `Collab Guard`: failed
+- Failure signature remains unchanged:
+  - jobs end in seconds with empty steps (`steps: []`) including Ubuntu-based guards
+  - pattern strongly supports infra/account gating (policy/quota/runner availability), not source-code test failure
+- Next unblock sequence (owner-side in GitHub settings):
+  - verify Actions usage quota/spending status
+  - verify runner availability/policy for this private repo
+  - switch diagnostics auth mode to one that can read check annotations from CLI
