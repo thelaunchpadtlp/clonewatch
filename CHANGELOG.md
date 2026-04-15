@@ -25,6 +25,36 @@ All notable project changes are recorded here.
 - GitHub repo setting `allow_auto_merge` enabled — future PRs can use `gh pr merge --auto --squash`
   to merge automatically once all required checks pass, eliminating manual merge step
 
+### Added (Claude Code session — wave 4: Sesiones Importantes subsystem)
+
+- `tools/sessions/harvest-sessions.sh` — main harvest automation script; discovers and archives
+  sessions from all registered agents; supports `--agent`, `--since`, `--list`, `--status`, `--dry-run`
+- `tools/sessions/sessions-config.json` — agent type registry with format versioning; registers
+  claude-code, codex, claude-cowork, claude-chat (enabled), cursor, gemini (disabled/ready)
+- `tools/sessions/importers/claude-code.sh` — importer for Claude Code JSONL sessions
+  (~/.claude/projects/); generates metadata.json + summary.md; warns about 30-day cleanup
+- `tools/sessions/importers/codex.sh` — importer for Codex JSONL sessions (~/.codex/sessions/);
+  handles large files (50–500MB) with reference-only policy; uses process substitution to avoid
+  subshell scope issues
+- `tools/sessions/importers/claude-cowork.sh` — importer for Claude Cowork audit.jsonl logs;
+  notes global-read-permission security issue
+- `tools/sessions/importers/claude-chat.sh` — importer for manual Claude Chat export ZIP; prints
+  step-by-step instructions when no --input is provided
+- `docs/sessions/GUIDE.md` — comprehensive guide for dummies: what each session type is, where
+  files live, how to export, how to harvest, how to add a new agent
+- `docs/sessions/protocols/harvest-protocol.md` — binding protocol for when/how/who harvests;
+  includes cleanup window rules (Claude Code: day 25), responsibilities table, fallback procedure
+- `docs/sessions/protocols/format-registry.md` — versioned registry of all known session formats;
+  schema, line structure, type inventory, detection method, deprecation tracking for each format
+- `docs/sessions/protocols/agent-onboarding.md` — step-by-step process to incorporate a new agent
+  type; includes checklist, template importer script, design decision rationale
+- `docs/sessions/archive/` — auto-generated archive directory (gitignored: raw files; tracked:
+  metadata.json, summary.md, raw-ref.txt)
+- **First real harvest** (2026-04-14):
+  - `claude-code-6e5936df` — session 6e5936df (3.5MB, 719 lines, 357 assistant turns)
+  - `codex-019d8b11` — session 019d8b11 (209MB, 6365 lines, full CI debugging session)
+- `docs/sessions/index.md` — auto-generated session index (Markdown table, updated by harvest script)
+
 ### Added (Claude Code session — wave 2: checkpoint automation)
 
 - `tools/collab/claude-checkpoint.sh` — automation trigger script for Claude; 6 trigger types

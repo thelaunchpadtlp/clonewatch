@@ -1,0 +1,5 @@
+/Users/piqui/.claude/projects/-Users-Shared-Pruebas-CloneWatch--claude-worktrees-ecstatic-noether/6e5936df-08ce-4e2a-8745-b235e0083df7.jsonl
+Size: 4.5M (4026965 bytes) | Lines: 811
+Status: active | Harvest count: 2
+Last modified: 2026-04-14 17:15:50
+⚠ Auto-deleted by Claude Code after 30 days (~30 days remaining)
