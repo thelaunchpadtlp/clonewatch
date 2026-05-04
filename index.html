@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAAP — Multi-AI Agent Party</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --border: #1e2330;
+      --text: #cdd6f4;
+      --muted: #6c7086;
+      --accent: #89b4fa;
+      --green: #a6e3a1;
+      --yellow: #f9e2af;
+      --red: #f38ba8;
+      --mauve: #cba6f7;
+      --teal: #94e2d5;
+      --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      font-size: 24px;
+      letter-spacing: -1px;
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      border: none;
+    }
+
+    .btn:hover { opacity: 0.8; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #1e1e2e;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--muted);
+    }
+
+    .hero {
+      padding: 64px 32px 48px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(137, 180, 250, 0.12);
+      border: 1px solid rgba(137, 180, 250, 0.25);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .ai-parade {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 48px;
+    }
+
+    .ai-chip {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid;
+    }
+
+    .ai-chip.codex    { color: #c6d0f5; border-color: #45475a; background: rgba(69,71,90,0.3); }
+    .ai-chip.claude   { color: #fab387; border-color: #fab387; background: rgba(250,179,135,0.1); }
+    .ai-chip.gemini-p { color: #89b4fa; border-color: #89b4fa; background: rgba(137,180,250,0.1); }
+    .ai-chip.gemini-n { color: #74c7ec; border-color: #74c7ec; background: rgba(116,199,236,0.1); }
+    .ai-chip.chatgpt  { color: #a6e3a1; border-color: #a6e3a1; background: rgba(166,227,161,0.1); }
+    .ai-chip.grok     { color: #f9e2af; border-color: #f9e2af; background: rgba(249,226,175,0.1); }
+    .ai-chip.mistral  { color: #f38ba8; border-color: #f38ba8; background: rgba(243,139,168,0.1); }
+    .ai-chip.deepseek { color: #cba6f7; border-color: #cba6f7; background: rgba(203,166,247,0.1); }
+    .ai-chip.perp     { color: #94e2d5; border-color: #94e2d5; background: rgba(148,226,213,0.1); }
+    .ai-chip.manus    { color: #eba0ac; border-color: #eba0ac; background: rgba(235,160,172,0.1); }
+
+    .download-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      max-width: 700px;
+      margin: 0 auto 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .download-info h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .download-info p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .terminal-block {
+      background: #11131c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      max-width: 700px;
+      margin: 0 auto 64px;
+      position: relative;
+    }
+
+    .terminal-block .prompt { color: var(--green); }
+    .terminal-block .cmd { color: var(--text); }
+    .terminal-block .comment { color: var(--muted); }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--border);
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--font-sans);
+    }
+
+    .copy-btn:hover { background: var(--muted); color: var(--bg); }
+
+    .spec-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    .spec-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .spec-header h2 {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    #spec-content h1 { font-size: 28px; margin: 48px 0 16px; color: var(--accent); }
+    #spec-content h2 { font-size: 22px; margin: 40px 0 14px; color: var(--mauve); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    #spec-content h3 { font-size: 17px; margin: 28px 0 10px; color: var(--teal); }
+    #spec-content h4 { font-size: 15px; margin: 20px 0 8px; color: var(--yellow); }
+
+    #spec-content p { margin: 0 0 14px; color: var(--text); }
+
+    #spec-content code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      background: rgba(137,180,250,0.1);
+      border: 1px solid rgba(137,180,250,0.15);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+
+    #spec-content pre {
+      background: #11131c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    #spec-content pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    #spec-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+
+    #spec-content th {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    #spec-content td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      color: var(--text);
+    }
+
+    #spec-content tr:hover td { background: rgba(255,255,255,0.02); }
+
+    #spec-content ul, #spec-content ol {
+      margin: 0 0 14px 22px;
+    }
+
+    #spec-content li { margin-bottom: 4px; }
+
+    #spec-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 4px 16px;
+      margin: 16px 0;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    #spec-content strong { color: var(--text); font-weight: 600; }
+    #spec-content em { color: var(--muted); }
+
+    #spec-content hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 80px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 20px 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+      .hero { padding: 40px 16px 32px; }
+      .download-section { flex-direction: column; text-align: center; }
+      .spec-wrapper { padding: 0 16px 60px; }
+      .terminal-block { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-mark">⬡</span>
+    <div>
+      <div class="logo-text">MAAP</div>
+      <div class="logo-sub">Multi-AI Agent Party</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="MAAP-SPEC.md" download class="btn btn-ghost">↓ .md</a>
+    <a href="#spec" class="btn btn-primary">Ver especificación</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-badge">Especificación técnica v0.1 — 2026</div>
+  <h1>Orquestación de <span>múltiples IA</span><br/>desde una sola terminal</h1>
+  <p>Arquitectura Browser-as-Service-Daemon, TUI de alta fidelidad con personalidad por modelo, routing determinístico, y autenticación persistente vía NMH + Chrome para Testing.</p>
+
+  <div class="ai-parade">
+    <span class="ai-chip codex">⬡ Codex</span>
+    <span class="ai-chip claude">◈ Claude</span>
+    <span class="ai-chip gemini-p">◆ Gemini Preview</span>
+    <span class="ai-chip gemini-n">◇ Gemini Nightly</span>
+    <span class="ai-chip chatgpt">⊕ ChatGPT</span>
+    <span class="ai-chip grok">≋ Grok</span>
+    <span class="ai-chip mistral">⋈ Mistral</span>
+    <span class="ai-chip deepseek">⬮ DeepSeek</span>
+    <span class="ai-chip perp">⊙ Perplexity</span>
+    <span class="ai-chip manus">⊞ Manus</span>
+  </div>
+
+  <div class="download-section">
+    <div class="download-info">
+      <h3>MAAP-SPEC.md</h3>
+      <p>Especificación unificada · 944 líneas · Optimizada para Gemini CLI en Cloud Shell</p>
+    </div>
+    <a href="MAAP-SPEC.md" download class="btn btn-primary">Descargar .md</a>
+  </div>
+
+  <div class="terminal-block">
+    <button class="copy-btn" onclick="copyCmd()">copiar</button>
+    <div><span class="comment"># Usar la especificación como contexto en Gemini CLI</span></div>
+    <div><span class="comment"># En Google Cloud Shell:</span></div>
+    <br/>
+    <div><span class="prompt">$</span> <span class="cmd">curl -sO https://thelaunchpadtlp.github.io/clonewatch/MAAP-SPEC.md</span></div>
+    <div><span class="prompt">$</span> <span class="cmd">gemini --context MAAP-SPEC.md --prompt "resume la arquitectura del bridge"</span></div>
+    <br/>
+    <div><span class="comment"># O directamente en streaming:</span></div>
+    <div><span class="prompt">$</span> <span class="cmd">curl -s https://thelaunchpadtlp.github.io/clonewatch/MAAP-SPEC.md | gemini -</span></div>
+  </div>
+</div>
+
+<div id="spec" class="spec-wrapper">
+  <div class="spec-header">
+    <h2>Especificación completa</h2>
+    <a href="MAAP-SPEC.md" download class="btn btn-ghost">↓ Descargar .md</a>
+  </div>
+  <div id="spec-content">
+    <div class="loading">Cargando especificación…</div>
+  </div>
+</div>
+
+<footer>
+  MAAP · The Launch Pad — TLP · 2026 · <a href="https://github.com/thelaunchpadtlp/clonewatch" style="color: var(--accent);">GitHub</a>
+</footer>
+
+<script>
+  async function loadSpec() {
+    try {
+      const res = await fetch('MAAP-SPEC.md');
+      if (!res.ok) throw new Error('fetch failed');
+      const md = await res.text();
+      document.getElementById('spec-content').innerHTML = marked.parse(md);
+    } catch (e) {
+      document.getElementById('spec-content').innerHTML =
+        '<p style="color:var(--muted)">No se pudo cargar el archivo .md en modo local. ' +
+        'Abrí esta página desde un servidor HTTP o descargá el .md directamente.</p>' +
+        '<pre style="margin-top:16px"><code>python3 -m http.server 8080</code></pre>';
+    }
+  }
+
+  function copyCmd() {
+    const cmds = [
+      'curl -sO https://thelaunchpadtlp.github.io/clonewatch/MAAP-SPEC.md',
+      'gemini --context MAAP-SPEC.md --prompt "resume la arquitectura del bridge"'
+    ].join('\n');
+    navigator.clipboard.writeText(cmds).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✓ copiado';
+      setTimeout(() => btn.textContent = 'copiar', 2000);
+    });
+  }
+
+  loadSpec();
+</script>
+
+</body>
+</html>
