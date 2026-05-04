@@ -107,7 +107,7 @@ GCP Free Tier / Cloud Shell ($HOME persistente 5GB)
   "mcpServers": {
     "maap": {
       "command": "/usr/local/bin/maap-bridge",
-      "args": ["--socket", "/Users/me/.maap/bridge.sock"]
+      "args": ["--socket", "/Users/<USUARIO>/.maap/bridge.sock"]
     }
   }
 }
@@ -920,7 +920,7 @@ multiaiagentparty/
 
 ```bash
 # Bootstrap completo en Cloud Shell
-curl -sL https://raw.githubusercontent.com/TU_ORG/multiaiagentparty/main/deploy/gcp/cloud-shell-init.sh | bash
+curl -sLO https://raw.githubusercontent.com/TU_ORG/multiaiagentparty/main/deploy/gcp/cloud-shell-init.sh && bash cloud-shell-init.sh
 
 # Usar MAAP via Gemini CLI
 gemini --prompt "use maap.session_status"

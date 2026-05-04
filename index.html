@@ -4,7 +4,90 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MAAP — Multi-AI Agent Party</title>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+  // Minimal markdown renderer — no CDN dependency, no XSS via innerHTML of untrusted content.
+  // Handles: fenced code blocks, ATX headers, tables, ordered/unordered lists,
+  // horizontal rules, blockquotes, inline code, bold, italic, links, and paragraphs.
+  const marked = (() => {
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+               .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function inline(s) {
+      return esc(s)
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" rel="noopener noreferrer">$1</a>');
+    }
+    function table(rows) {
+      const lines = rows.filter(l => l.trim());
+      if (lines.length < 2) return lines.map(l => `<p>${inline(l)}</p>`).join('\n');
+      const header = lines[0].split('|').filter((_,i,a) => i>0&&i<a.length-1).map(c=>`<th>${inline(c.trim())}</th>`).join('');
+      const body = lines.slice(2).map(r => {
+        const cells = r.split('|').filter((_,i,a) => i>0&&i<a.length-1).map(c=>`<td>${inline(c.trim())}</td>`).join('');
+        return `<tr>${cells}</tr>`;
+      }).join('\n');
+      return `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
+    }
+    function parse(md) {
+      const out = [];
+      const lines = md.split('\n');
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i];
+        // Fenced code block
+        if (/^```/.test(line)) {
+          const lang = line.slice(3).trim();
+          const code = [];
+          i++;
+          while (i < lines.length && !/^```/.test(lines[i])) { code.push(esc(lines[i])); i++; }
+          out.push(`<pre><code class="language-${esc(lang)}">${code.join('\n')}</code></pre>`);
+          i++; continue;
+        }
+        // ATX headers
+        const hm = line.match(/^(#{1,4})\s+(.*)/);
+        if (hm) { const n=hm[1].length; out.push(`<h${n}>${inline(hm[2])}</h${n}>`); i++; continue; }
+        // HR
+        if (/^---+$/.test(line.trim())) { out.push('<hr>'); i++; continue; }
+        // Blockquote
+        if (/^> /.test(line)) {
+          const bq = [];
+          while (i < lines.length && /^> /.test(lines[i])) { bq.push(lines[i].slice(2)); i++; }
+          out.push(`<blockquote>${parse(bq.join('\n'))}</blockquote>`); continue;
+        }
+        // Table (line contains | and next line is separator)
+        if (/\|/.test(line) && i+1 < lines.length && /^\|?[\s\-:]+\|/.test(lines[i+1])) {
+          const trows = [];
+          while (i < lines.length && /\|/.test(lines[i])) { trows.push(lines[i]); i++; }
+          out.push(table(trows)); continue;
+        }
+        // Unordered list
+        if (/^[-*] /.test(line)) {
+          const items = [];
+          while (i < lines.length && /^[-*] /.test(lines[i])) { items.push(`<li>${inline(lines[i].slice(2))}</li>`); i++; }
+          out.push(`<ul>${items.join('')}</ul>`); continue;
+        }
+        // Ordered list
+        if (/^\d+\. /.test(line)) {
+          const items = [];
+          while (i < lines.length && /^\d+\. /.test(lines[i])) { items.push(`<li>${inline(lines[i].replace(/^\d+\.\s+/,''))}</li>`); i++; }
+          out.push(`<ol>${items.join('')}</ol>`); continue;
+        }
+        // Blank line
+        if (line.trim() === '') { i++; continue; }
+        // Paragraph
+        const para = [];
+        while (i < lines.length && lines[i].trim() !== '' && !/^[#>```\-*]/.test(lines[i]) && !/^\d+\./.test(lines[i])) {
+          para.push(lines[i]); i++;
+        }
+        if (para.length) out.push(`<p>${inline(para.join(' '))}</p>`);
+      }
+      return out.join('\n');
+    }
+    return { parse };
+  })();
+  </script>
   <style>
     :root {
       --bg: #0d0f14;
@@ -430,7 +513,7 @@
       const res = await fetch('MAAP-SPEC.md');
       if (!res.ok) throw new Error('fetch failed');
       const md = await res.text();
-      document.getElementById('spec-content').innerHTML = marked.parse(md);
+      document.getElementById('spec-content').innerHTML = marked.parse(md); // safe: inline renderer escapes all raw HTML
     } catch (e) {
       document.getElementById('spec-content').innerHTML =
         '<p style="color:var(--muted)">No se pudo cargar el archivo .md en modo local. ' +
